@@ -15,6 +15,7 @@ if (loginUser != null) {
 	<p>ログイン中のユーザー名：<%= loginUser.getUsername() %>さん</p>
 	<ul>
 		<li><a href="BlackjackServlet">ゲーム開始</a></li>
+		<li><a href="MyRecordServlet">自分の戦績</a></li>
 		<li><a href="">自分の戦績</a></li>
 		<li><a href="">全体ランキング</a></li>
 		<li><a href="AdminServlet">ユーザー管理</a></li>

@@ -1,6 +1,9 @@
 package model;
 
 public class Login {
+
+	private String userId; 
+
 	private String username;
 	private String password;
 
@@ -8,6 +11,21 @@ public class Login {
 		this.username = username;
 		this.password = password;
 	}
+
+	
+	public Login(String userId, String username, String password) {
+	    this.userId = userId;
+	    this.username = username;
+	    this.password = password;
+	}
+	
+	public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
 	public String getUsername() {
 		return username;
