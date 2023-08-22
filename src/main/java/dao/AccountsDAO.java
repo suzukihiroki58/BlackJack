@@ -69,7 +69,9 @@ public class AccountsDAO {
 				String username = rs.getString("USERNAME");
 				String password = rs.getString("PASSWORD");
 				String nickname = rs.getString("NICKNAME");
+
 				login.setUserId(userId);  
+
 				account = new Account(userId, username, password, nickname);
 			}
 		} catch (SQLException e) {
@@ -198,5 +200,4 @@ public class AccountsDAO {
 	    
 	    return record;
 	}
-
 }

@@ -15,7 +15,7 @@
 public String checkWinner(BlackjackGame game, Login loginUser) {
     int playerTotal = game.getPlayer().getHandTotal();
     int dealerTotal = game.getDealer().getHandTotal();
-    
+
     boolean win = false;
     boolean lose = false;
     boolean draw = false;
@@ -65,6 +65,23 @@ private void updateGameRecordsAndReturnMessage(Login loginUser, boolean win, boo
     } catch (Exception e) {
         e.printStackTrace();
     }    
+
+    if (playerTotal > 21) {
+        return "プレイヤーのバーストにより、ディーラーの勝利";
+    }
+
+    if (dealerTotal > 21) {
+        return "ディーラーのバーストにより、プレイヤーの勝利";
+    }
+
+    if (playerTotal > dealerTotal) {
+        return "プレイヤーの勝利";
+    } else if (dealerTotal > playerTotal) {
+        return "ディーラーの勝利";
+    } else {
+        return "引き分け";
+    }
+    
 }
 
 %>
