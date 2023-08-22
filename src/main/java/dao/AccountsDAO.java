@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import model.Account;
+import model.GameRecord;
 import model.Login;
 
 public class AccountsDAO {
@@ -68,6 +69,7 @@ public class AccountsDAO {
 				String username = rs.getString("USERNAME");
 				String password = rs.getString("PASSWORD");
 				String nickname = rs.getString("NICKNAME");
+				login.setUserId(userId);  
 				account = new Account(userId, username, password, nickname);
 			}
 		} catch (SQLException e) {
@@ -165,4 +167,36 @@ public class AccountsDAO {
 			}
 		}
 	}
+	
+	public GameRecord getUserRecords(String userId) {
+	    GameRecord record = null;
+	    
+	    try {
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+	    } catch (ClassNotFoundException e) {
+	        throw new IllegalStateException("JDBCドライバを読み込めませんでした");
+	    }
+	    
+	    try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+	        String sql = "SELECT total_games, wins, losses, draws, win_rate FROM game_records WHERE user_id = ?";
+	        PreparedStatement pStmt = conn.prepareStatement(sql);
+	        pStmt.setString(1, userId);
+
+	        ResultSet rs = pStmt.executeQuery();
+
+	        if (rs.next()) {
+	            record = new GameRecord();
+	            record.setTotalGames(rs.getInt("total_games"));
+	            record.setWins(rs.getInt("wins"));
+	            record.setLosses(rs.getInt("losses"));
+	            record.setDraws(rs.getInt("draws"));
+	            record.setWinrate(rs.getInt("win_rate"));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    
+	    return record;
+	}
+
 }
