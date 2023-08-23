@@ -25,21 +25,21 @@ public String checkWinner(BlackjackGame game, Login loginUser) {
     if (playerTotal > 21 && dealerTotal > 21) {
         draw = true;
         resultMessage = "両者バーストにより、引き分け";
-        updateGameRecordsAndReturnMessage(loginUser, win, lose, draw, resultMessage);
+        updateGameRecordsAndReturnMessage(loginUser, win, lose, draw, resultMessage, playerTotal, dealerTotal);
         return resultMessage;
     }
 
     if (playerTotal > 21) {
     	lose = true;
     	resultMessage = "プレイヤーのバーストにより、ディーラーの勝利";
-    	updateGameRecordsAndReturnMessage(loginUser, win, lose, draw, resultMessage);
+    	updateGameRecordsAndReturnMessage(loginUser, win, lose, draw, resultMessage, playerTotal, dealerTotal);
         return resultMessage;
     }
 
     if (dealerTotal > 21) {
     	win = true;
     	resultMessage = "ディーラーのバーストにより、プレイヤーの勝利";
-    	updateGameRecordsAndReturnMessage(loginUser, win, lose, draw, resultMessage);
+    	updateGameRecordsAndReturnMessage(loginUser, win, lose, draw, resultMessage, playerTotal, dealerTotal);
         return resultMessage;
     }
     
@@ -54,11 +54,10 @@ public String checkWinner(BlackjackGame game, Login loginUser) {
     	draw = true;
     	resultMessage = "引き分け";
     }
-    updateGameRecordsAndReturnMessage(loginUser, win, lose, draw, resultMessage);
-    return resultMessage;
+    return updateGameRecordsAndReturnMessage(loginUser, win, lose, draw, resultMessage, playerTotal, dealerTotal);
 }
 
-private void updateGameRecordsAndReturnMessage(Login loginUser, boolean win, boolean lose, boolean draw, String resultMessage) {
+private String updateGameRecordsAndReturnMessage(Login loginUser, boolean win, boolean lose, boolean draw, String resultMessage, int playerTotal, int dealerTotal) {
     try {
         dao.AccountsDAO dao = new dao.AccountsDAO();
         dao.updateGameRecords(Integer.parseInt(loginUser.getUserId()), win, lose, draw);
@@ -66,21 +65,7 @@ private void updateGameRecordsAndReturnMessage(Login loginUser, boolean win, boo
         e.printStackTrace();
     }    
 
-    if (playerTotal > 21) {
-        return "プレイヤーのバーストにより、ディーラーの勝利";
-    }
-
-    if (dealerTotal > 21) {
-        return "ディーラーのバーストにより、プレイヤーの勝利";
-    }
-
-    if (playerTotal > dealerTotal) {
-        return "プレイヤーの勝利";
-    } else if (dealerTotal > playerTotal) {
-        return "ディーラーの勝利";
-    } else {
-        return "引き分け";
-    }
+    return resultMessage;
     
 }
 

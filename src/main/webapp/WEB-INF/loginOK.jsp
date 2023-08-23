@@ -16,9 +16,11 @@ if (loginUser != null) {
 	<ul>
 		<li><a href="BlackjackServlet">ゲーム開始</a></li>
 		<li><a href="MyRecordServlet">自分の戦績</a></li>
-		<li><a href="">自分の戦績</a></li>
-		<li><a href="">全体ランキング</a></li>
+		<li><a href="RankingServlet">全ユーザー勝率ランキング</a></li>
+		<li><a href="DeleteUserServlet">退会</a></li>
+		<% if ("admin".equals(loginUser.getRole())) { %>
 		<li><a href="AdminServlet">ユーザー管理</a></li>
+		<% } %>
 		<li><a href="LogoutServlet">ログアウト</a></li>
 	</ul>
 	<% }else{%>
