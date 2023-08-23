@@ -6,6 +6,8 @@ public class Login {
 
 	private String username;
 	private String password;
+	
+	private String role;
 
 	public Login(String username, String password) {
 		this.username = username;
@@ -34,4 +36,12 @@ public class Login {
 	public String getPassword() {
 		return password;
 	}
+	
+	public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

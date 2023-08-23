@@ -1,6 +1,8 @@
 package model;
 
 	public class GameRecord {
+		private String userId;
+		private String username;
 	    private int totalGames;
 	    private int wins;
 	    private int losses;
@@ -10,12 +12,28 @@ package model;
 	    public GameRecord() {
 	    }
 	    
-	    public GameRecord(int totalGames, int wins, int losses, int draws, int winRate) {
+	    public GameRecord(String userId, int totalGames, int wins, int losses, int draws, int winRate) {
 	        this.totalGames = totalGames;
 	        this.wins = wins;
 	        this.losses = losses;
 	        this.draws = draws;
 	        this.winRate = winRate;
+	    }
+	    
+	    public String getUserId() {
+	        return userId;
+	    }
+
+	    public void setUserId(String userId) {
+	        this.userId = userId;
+	    }
+	    
+	    public String getUsername() {
+	        return username;
+	    }
+
+	    public void setUsername(String username) {
+	        this.username = username;
 	    }
 
 	    public int getTotalGames() {
