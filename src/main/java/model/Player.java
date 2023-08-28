@@ -31,6 +31,9 @@ public class Player {
 			total -= 10;
 			aces--;
 		}
+		//デバッグ
+		System.out.println("getHandTotal: " + total);
+
 		return total;
 	}
 

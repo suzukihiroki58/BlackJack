@@ -26,7 +26,7 @@ List<Account> users = (List<Account>) request.getAttribute("users");
     <% for(Account user : users) { %>
         <tr>
             <td><%= user.getUserId() %></td>
-            <td><%= user.getUsername() %></td>
+            <td><%= user.getUserName() %></td>
             <td><%= user.getNickname() %></td>
             <td>
                 <form action="DeleteAnyUserServlet" method="post">

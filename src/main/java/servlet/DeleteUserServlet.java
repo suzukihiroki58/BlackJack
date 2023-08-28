@@ -16,7 +16,7 @@ import model.Login;
 @WebServlet("/DeleteUserServlet")
 public class DeleteUserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		BlackjackGame game = new BlackjackGame();
 		req.setAttribute("game", game);
@@ -31,7 +31,7 @@ public class DeleteUserServlet extends HttpServlet {
 
 			if (loggedInUser != null) {
 				AccountsDAO dbManager = new AccountsDAO();
-				dbManager.deleteUser(loggedInUser.getUsername());
+				dbManager.deleteUser(loggedInUser.getUserName());
 
 				session.invalidate();
 				response.sendRedirect("WelcomeServlet?message=UserDeleted");

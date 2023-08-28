@@ -27,21 +27,21 @@ public class RegisterServlet extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 
-		String username = request.getParameter("username");
+		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
 		String nickname = request.getParameter("nickname");
 
-		System.out.println("Username: " + username);
+		System.out.println("Username: " + userName);
 		System.out.println("Password: " + password);
 		System.out.println("Nickname: " + nickname);
 
 		AccountsDAO accountsDAO = new AccountsDAO();
 
-		boolean isRegistered = accountsDAO.registerUser(username, password, nickname);
+		boolean isRegistered = accountsDAO.registerUser(userName, password, nickname);
 
 		if (isRegistered) {
 			HttpSession session = request.getSession();
-			session.setAttribute("username", username);
+			session.setAttribute("userName", userName);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/login.jsp");
 			dispatcher.forward(request, response);
 		} else {

@@ -9,7 +9,7 @@
 <body>
 <h1>新規ユーザー登録</h1>
 <form action="RegisterServlet" method="post">
-ユーザーネーム：<input type="text" name="username"><br>
+ユーザーネーム：<input type="text" name="userName"><br>
 パスワード：<input type="password" name="password"><br>
 ニックネーム：<input type="text" name="nickname"><br>
 <input type="submit" value="登録">
