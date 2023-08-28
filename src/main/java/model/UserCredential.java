@@ -1,6 +1,6 @@
 package model;
 
-public class Login {
+public class UserCredential {
 
 	private String userId;
 
@@ -9,12 +9,12 @@ public class Login {
 
 	private String role;
 
-	public Login(String userName, String password) {
+	public UserCredential(String userName, String password) {
 		this.userName = userName;
 		this.password = password;
 	}
 
-	public Login(String userId, String userName, String password) {
+	public UserCredential(String userId, String userName, String password) {
 		this.userId = userId;
 		this.userName = userName;
 		this.password = password;

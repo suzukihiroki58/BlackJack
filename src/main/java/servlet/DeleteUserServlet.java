@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import dao.AccountsDAO;
 import model.BlackjackGame;
-import model.Login;
+import model.UserCredential;
 
 @WebServlet("/DeleteUserServlet")
 public class DeleteUserServlet extends HttpServlet {
@@ -27,7 +27,7 @@ public class DeleteUserServlet extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		if (session != null) {
-			Login loggedInUser = (Login) session.getAttribute("loginUser");
+			UserCredential loggedInUser = (UserCredential) session.getAttribute("loginUser");
 
 			if (loggedInUser != null) {
 				AccountsDAO dbManager = new AccountsDAO();

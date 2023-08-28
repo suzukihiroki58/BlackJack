@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import model.Login;
+import model.UserCredential;
 import service.LoginLogic;
 
 @WebServlet("/LoginServlet")
@@ -31,15 +31,15 @@ public class LoginServlet extends HttpServlet {
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
 
-		Login login = new Login(userName, password);
+		UserCredential userCredential = new UserCredential(userName, password);
 		LoginLogic bo = new LoginLogic();
-		boolean result = bo.execute(login);
+		boolean result = bo.execute(userCredential);
 
 		if (result) {
 			HttpSession session = request.getSession();
-			session.setAttribute("loginUser", login);
+			session.setAttribute("loginUser", userCredential);
 
-			session.setAttribute("userId", login.getUserId());
+			session.setAttribute("userId", userCredential.getUserId());
 
 			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/loginOK.jsp");
 			dispatcher.forward(request, response);
