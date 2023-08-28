@@ -7,8 +7,9 @@ import java.util.Random;
 
 public class Deck {
 	private final List<Card> cards;
-	private final List<String> suits = Arrays.asList("♡", "♢", "♧", "♤");
-	private final List<String> values = Arrays.asList("A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K");
+	private final List<String> suits = Arrays.asList("HEARTS", "DIAMONDS", "CLUBS", "SPADES");
+	private final List<String> values = Arrays.asList("ACE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT",
+			"NINE", "TEN", "JACK", "QUEEN", "KING");
 
 	public Deck() {
 		cards = new ArrayList<>();
@@ -22,7 +23,8 @@ public class Deck {
 
 	public void shuffle() {
 		Random random = new Random();
-		for (int i = 0; i < cards.size(); i++) {
+		int shuffleCount = cards.size();
+		for (int i = 0; i < shuffleCount; i++) {
 			int swapIndex = random.nextInt(cards.size());
 			Card temp = cards.get(i);
 			cards.set(i, cards.get(swapIndex));

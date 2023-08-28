@@ -1,5 +1,6 @@
-package dao;
+package service;
 
+import dao.AccountsDAO;
 import model.Account;
 import model.Login;
 

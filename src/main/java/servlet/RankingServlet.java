@@ -14,13 +14,14 @@ import model.GameRecord;
 
 @WebServlet("/RankingServlet")
 public class RankingServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        AccountsDAO dao = new AccountsDAO();
-        List<GameRecord> records = dao.getAllUserRecords(); 
-        
-        request.setAttribute("rankings", records);
-        request.getRequestDispatcher("/WEB-INF/ranking.jsp").forward(request, response);
-    }
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		AccountsDAO dao = new AccountsDAO();
+		List<GameRecord> records = dao.getAllUserRecords();
+
+		request.setAttribute("rankings", records);
+		request.getRequestDispatcher("/WEB-INF/ranking.jsp").forward(request, response);
+	}
 }

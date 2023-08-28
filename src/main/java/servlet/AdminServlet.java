@@ -19,9 +19,9 @@ public class AdminServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		AccountsDAO dao = new AccountsDAO();
-        List<Account> allUsers = dao.getAllUsers();
-        
-        request.setAttribute("users", allUsers);
-        request.getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
+		List<Account> allUsers = dao.getAllUsers();
+
+		request.setAttribute("users", allUsers);
+		request.getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
 	}
 }

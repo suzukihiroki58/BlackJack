@@ -4,17 +4,21 @@ public class BlackjackGame {
 	private final Deck deck;
 	private final Player player;
 	private final Player dealer;
-	private boolean playerStood = false; 
+	private boolean playerStand = false;
 
 	public boolean isGameOver() {
-		if (playerStood) {
-			return true; 
-		}
-		if (getPlayer().getHandTotal() > 21) {
-			return true; 
-		}
-		if (getDealer().getHandTotal() > 21) {
-			return true; 
+		if (playerStand) {
+			//デバッグ
+			System.out.println("プレイヤーの手札： " + player.toString() + "\nディーラーの手札： " + dealer.toString());
+			return true;
+		} else if (getPlayer().getHandTotal() > 21) {
+			//デバッグ
+			System.out.println("プレイヤーの手札： " + player.toString() + "\nディーラーの手札： " + dealer.toString());
+			return true;
+		} else if (getDealer().getHandTotal() > 21) {
+			//デバッグ
+			System.out.println("プレイヤーの手札： " + player.toString() + "\nディーラーの手札： " + dealer.toString());
+			return true;
 		}
 		return false;
 	}
@@ -24,6 +28,8 @@ public class BlackjackGame {
 		player = new Player();
 		dealer = new Player();
 		dealInitialCards();
+		//デバッグ
+		System.out.println("プレイヤーの手札： " + player.toString() + "\nディーラーの手札： " + dealer.toString());
 	}
 
 	public void dealInitialCards() {
@@ -41,14 +47,6 @@ public class BlackjackGame {
 		return dealer;
 	}
 
-	public String displayTable() {
-		if (!this.isGameOver()) {
-			return "プレイヤーの手札： " + player.toString() + "\nディーラーの手札： " + dealer.getHand().get(0) + "と非表示のカード";
-		} else {
-			return "プレイヤーの手札： " + player.toString() + "\nディーラーの手札： " + dealer.toString();
-		}
-	}
-
 	public Card drawCard() {
 		return deck.drawCard();
 	}
@@ -56,9 +54,9 @@ public class BlackjackGame {
 	public void playerHit() {
 		player.receiveCard(deck.drawCard());
 	}
-	
+
 	public void playerStand() {
-		this.playerStood = true;
+		this.playerStand = true;
 	}
 
 }

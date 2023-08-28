@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.LoginLogic;
 import model.Login;
+import service.LoginLogic;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -28,10 +28,10 @@ public class LoginServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		request.setCharacterEncoding("UTF-8");
-		String username = request.getParameter("username");
+		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
 
-		Login login = new Login(username, password);
+		Login login = new Login(userName, password);
 		LoginLogic bo = new LoginLogic();
 		boolean result = bo.execute(login);
 

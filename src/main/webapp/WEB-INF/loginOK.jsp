@@ -12,7 +12,7 @@
 Login loginUser = (Login) session.getAttribute("loginUser");
 if (loginUser != null) {
 %>
-	<p>ログイン中のユーザー名：<%= loginUser.getUsername() %>さん</p>
+	<p>ログイン中のユーザー名：<%= loginUser.getUserName() %>さん</p>
 	<ul>
 		<li><a href="BlackjackServlet">ゲーム開始</a></li>
 		<li><a href="MyRecordServlet">自分の戦績</a></li>

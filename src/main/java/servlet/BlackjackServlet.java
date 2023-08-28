@@ -16,7 +16,9 @@ import model.BlackjackGame;
 public class BlackjackServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
 		BlackjackGame game = new BlackjackGame();
+		session.setAttribute("game", game);
 		req.setAttribute("game", game);
 		req.getRequestDispatcher("/WEB-INF/blackjack.jsp").forward(req, resp);
 	}
@@ -36,8 +38,17 @@ public class BlackjackServlet extends HttpServlet {
 				game.playerHit();
 			} else if ("stand".equals(action)) {
 				game.playerStand();
-				while (game.getDealer().getHandTotal() < 17) {
-					game.getDealer().receiveCard(game.drawCard());
+				boolean shouldDealerStand = false;
+				if (game.getDealer().getHand().size() == 2 && game.getDealer().getHandTotal() >= 17) {
+					shouldDealerStand = true;
+				}
+				if (!shouldDealerStand) {
+					while (game.getDealer().getHandTotal() < 17) {
+						if (game.getDealer().getHandTotal() > 21) {
+							break;
+						}
+						game.getDealer().receiveCard(game.drawCard());
+					}
 				}
 			}
 		}

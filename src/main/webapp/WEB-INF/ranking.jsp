@@ -29,7 +29,7 @@ List<GameRecord> records = dao.getAllUserRecords();
     if (rank <= 5){%>
     <tr>
     	<td><%= rank++ %></td>
-        <td><%= record.getUsername() %></td>
+        <td><%= record.getUserName() %></td>
         <td><%= record.getTotalGames() %></td>
         <td><%= record.getWins() %></td>
         <td><%= record.getLosses() %></td>
