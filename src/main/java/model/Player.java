@@ -37,8 +37,7 @@ public class Player {
 		return total;
 	}
 
-	@Override
-	public String toString() {
+	public String describeHand() {
 		StringBuilder builder = new StringBuilder();
 		for (Card card : hand) {
 			builder.append(card.toString()).append("と");
