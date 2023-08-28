@@ -10,7 +10,7 @@ import java.util.List;
 
 import model.Account;
 import model.GameRecord;
-import model.Login;
+import model.UserCredential;
 
 public class AccountsDAO {
 
@@ -49,7 +49,7 @@ public class AccountsDAO {
 		return isSuccess;
 	}
 
-	public Account findByLogin(Login login) {
+	public Account findAccountByUserNameAndPassword(UserCredential userCredential) {
 		Account account = null;
 
 		try {
@@ -61,8 +61,8 @@ public class AccountsDAO {
 		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
 			String sql = "SELECT USER_ID, USERNAME, PASSWORD, NICKNAME, ROLE FROM USERS WHERE USERNAME = ? AND PASSWORD = ?";
 			PreparedStatement pStmt = conn.prepareStatement(sql);
-			pStmt.setString(1, login.getUserName());
-			pStmt.setString(2, login.getPassword());
+			pStmt.setString(1, userCredential.getUserName());
+			pStmt.setString(2, userCredential.getPassword());
 
 			ResultSet rs = pStmt.executeQuery();
 
@@ -73,8 +73,8 @@ public class AccountsDAO {
 				String nickname = rs.getString("NICKNAME");
 				String role = rs.getString("ROLE");
 
-				login.setUserId(userId);
-				login.setRole(role);
+				userCredential.setUserId(userId);
+				userCredential.setRole(role);
 
 				account = new Account(userId, userName, password, nickname);
 			}
