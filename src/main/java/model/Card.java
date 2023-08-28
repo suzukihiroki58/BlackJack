@@ -70,6 +70,6 @@ public class Card {
 
 	@Override
 	public String toString() {
-		return suit + value;
+		return suit + " " +value;
 	}
 }
