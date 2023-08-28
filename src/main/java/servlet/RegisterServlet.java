@@ -37,7 +37,7 @@ public class RegisterServlet extends HttpServlet {
 
 		AccountsDAO accountsDAO = new AccountsDAO();
 
-		boolean isRegistered = accountsDAO.registerUser(userName, password, nickname);
+		boolean isRegistered = accountsDAO.isUserRegisteredSuccessfully(userName, password, nickname);
 
 		if (isRegistered) {
 			HttpSession session = request.getSession();

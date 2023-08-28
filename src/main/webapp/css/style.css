@@ -32,18 +32,3 @@ button:hover {
     height: auto;
     margin: 5px;
 }
-
-@keyframes dealCard {
-    0% {
-        transform: translate(0, 0);
-        opacity: 0;
-    }
-    100% {
-        transform: translate(0, 0);
-        opacity: 1;
-    }
-}
-
-.deal {
-    animation: dealCard 0.5s ease;
-}

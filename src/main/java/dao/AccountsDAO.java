@@ -18,7 +18,7 @@ public class AccountsDAO {
 	private static final String DB_USERNAME = "1";
 	private static final String DB_PASSWORD = "1234";
 
-	public boolean registerUser(String userName, String password, String nickname) {
+	public boolean isUserRegisteredSuccessfully(String userName, String password, String nickname) {
 		boolean isSuccess = false;
 
 		try {
