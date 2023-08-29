@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="model.Login" %>
+<%@ page import="model.UserCredential" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +9,7 @@
 </head>
 <body>
 <%
-Login loginUser = (Login) session.getAttribute("loginUser");
+UserCredential loginUser = (UserCredential) session.getAttribute("loginUser");
 if (loginUser != null) {
 %>
 	<p>ログイン中のユーザー名：<%= loginUser.getUserName() %>さん</p>
