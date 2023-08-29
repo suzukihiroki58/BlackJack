@@ -8,6 +8,9 @@
 </head>
 <body>
 <h1>新規ユーザー登録</h1>
+<% if (request.getAttribute("errorMessage") != null) { %>
+  <p style="color: red;"><%= request.getAttribute("errorMessage") %></p>
+<% } %>
 <form action="RegisterServlet" method="post">
 ユーザーネーム：<input type="text" name="userName"><br>
 パスワード：<input type="password" name="password"><br>
@@ -15,5 +18,6 @@
 <input type="submit" value="登録">
 </form>
 <a href="WelcomeServlet">トップページへ戻る</a>
+
 </body>
 </html>

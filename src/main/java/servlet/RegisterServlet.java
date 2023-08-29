@@ -37,6 +37,15 @@ public class RegisterServlet extends HttpServlet {
 
 		AccountsDAO accountsDAO = new AccountsDAO();
 
+		boolean userNameExists = accountsDAO.isUserNameExists(userName);
+
+		if (userNameExists) {
+			request.setAttribute("errorMessage", "そのユーザー名は既に使用されています。");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/register.jsp");
+			dispatcher.forward(request, response);
+			return;
+		}
+
 		boolean isRegistered = accountsDAO.isUserRegisteredSuccessfully(userName, password, nickname);
 
 		if (isRegistered) {

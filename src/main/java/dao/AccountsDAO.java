@@ -322,5 +322,23 @@ public class AccountsDAO {
 
 		return accounts;
 	}
+	
+	public boolean isUserNameExists(String userName) {
+	    boolean exists = false;
+	    try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+	        String sql = "SELECT USERNAME FROM USERS WHERE USERNAME = ?";
+	        PreparedStatement pStmt = conn.prepareStatement(sql);
+	        pStmt.setString(1, userName);
+
+	        ResultSet rs = pStmt.executeQuery();
+	        if (rs.next()) {
+	            exists = true;
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return exists;
+	}
+
 
 }
