@@ -1,11 +1,15 @@
 package dao;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import model.Account;
@@ -18,8 +22,31 @@ public class AccountsDAO {
 	private static final String DB_USERNAME = "1";
 	private static final String DB_PASSWORD = "1234";
 
+	private String generateSalt() {
+		SecureRandom random = new SecureRandom();
+		byte[] salt = new byte[16];
+		random.nextBytes(salt);
+		return Base64.getEncoder().encodeToString(salt);
+	}
+
+	private String hashPassword(String password, String salt) {
+		String generatedPassword = null;
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			md.update(salt.getBytes());
+			byte[] bytes = md.digest(password.getBytes());
+			generatedPassword = Base64.getEncoder().encodeToString(bytes);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return generatedPassword;
+	}
+
 	public boolean isUserRegisteredSuccessfully(String userName, String password, String nickname) {
 		boolean isSuccess = false;
+
+		String salt = generateSalt();
+		String hashedPassword = hashPassword(password, salt);
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -27,14 +54,15 @@ public class AccountsDAO {
 			throw new IllegalStateException("JDBCドライバを読み込めませんでした");
 		}
 
-		String sql = "INSERT INTO USERS (USERNAME, PASSWORD, NICKNAME) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO USERS (USERNAME, HASHED_PASSWORD, SALT, NICKNAME) VALUES (?, ?, ?, ?)";
 
 		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 				PreparedStatement pStmt = conn.prepareStatement(sql)) {
 
 			pStmt.setString(1, userName);
-			pStmt.setString(2, password);
-			pStmt.setString(3, nickname);
+			pStmt.setString(2, hashedPassword);
+			pStmt.setString(3, salt);
+			pStmt.setString(4, nickname);
 
 			int result = pStmt.executeUpdate();
 
@@ -59,24 +87,25 @@ public class AccountsDAO {
 		}
 
 		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
-			String sql = "SELECT USER_ID, USERNAME, PASSWORD, NICKNAME, ROLE FROM USERS WHERE USERNAME = ? AND PASSWORD = ?";
+			String sql = "SELECT USER_ID, USERNAME, HASHED_PASSWORD, SALT, NICKNAME, ROLE FROM USERS WHERE USERNAME = ?";
 			PreparedStatement pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1, userCredential.getUserName());
-			pStmt.setString(2, userCredential.getPassword());
 
 			ResultSet rs = pStmt.executeQuery();
 
 			if (rs.next()) {
 				String userId = rs.getString("USER_ID");
 				String userName = rs.getString("USERNAME");
-				String password = rs.getString("PASSWORD");
+				String storedHash = rs.getString("HASHED_PASSWORD");
+				String storedSalt = rs.getString("SALT");
 				String nickname = rs.getString("NICKNAME");
 				String role = rs.getString("ROLE");
 
-				userCredential.setUserId(userId);
-				userCredential.setRole(role);
-
-				account = new Account(userId, userName, password, nickname);
+				if (storedHash.equals(hashPassword(userCredential.getPassword(), storedSalt))) {
+					account = new Account(userId, userName, storedHash, storedSalt, nickname, role);
+					userCredential.setUserId(userId);
+					userCredential.setRole(role);
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -279,7 +308,13 @@ public class AccountsDAO {
 
 			while (rs.next()) {
 				accounts.add(
-						new Account(rs.getString("USER_ID"), rs.getString("USERNAME"), "", rs.getString("NICKNAME")));
+						new Account(
+								rs.getString("USER_ID"),
+								rs.getString("USERNAME"),
+								rs.getString("HASHED_PASSWORD"),
+								rs.getString("SALT"),
+								rs.getString("NICKNAME"),
+								rs.getString("ROLE")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

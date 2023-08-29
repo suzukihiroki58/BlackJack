@@ -4,7 +4,7 @@
 <%@ page import="java.util.List"%>
 
 <%
-Login loginUser = (Login) session.getAttribute("loginUser");
+UserCredential loginUser = (UserCredential) session.getAttribute("loginUser");
 %>
 
 <%
@@ -15,7 +15,7 @@ if (game == null) {
 }
 %>
 
-<%!public String checkWinner(BlackjackGame game, Login loginUser) {
+<%!public String checkWinner(BlackjackGame game, UserCredential loginUser) {
 		int playerTotal = game.getPlayer().getHandTotal();
 		int dealerTotal = game.getDealer().getHandTotal();
 
@@ -49,7 +49,7 @@ if (game == null) {
 		return updateGameRecordsAndReturnMessage(loginUser, win, lose, draw, resultMessage, playerTotal, dealerTotal);
 	}
 
-	private String updateGameRecordsAndReturnMessage(Login loginUser, boolean win, boolean lose, boolean draw,
+	private String updateGameRecordsAndReturnMessage(UserCredential loginUser, boolean win, boolean lose, boolean draw,
 			String resultMessage, int playerTotal, int dealerTotal) {
 		try {
 			dao.AccountsDAO dao = new dao.AccountsDAO();
