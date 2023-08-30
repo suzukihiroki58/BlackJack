@@ -114,66 +114,33 @@ public class AccountsDAO {
 
 		return account;
 	}
-
+	
 	public void updateGameRecords(int userId, boolean win, boolean lose, boolean draw) {
-		try {
-			Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+	    try {
+	        Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 
-			String query = "SELECT * FROM game_records WHERE user_id = ?";
-			PreparedStatement ps = conn.prepareStatement(query);
-			ps.setInt(1, userId);
-			ResultSet rs = ps.executeQuery();
+	        int wins = win ? 1 : 0;
+	        int losses = lose ? 1 : 0;
+	        int draws = draw ? 1 : 0;
+	        int totalGames = 1;
 
-			if (rs.next()) {
-				int totalGames = rs.getInt("total_games") + 1;
-				int wins = rs.getInt("wins");
-				int losses = rs.getInt("losses");
-				int draws = rs.getInt("draws");
+	        String upsertQuery = "INSERT INTO game_records (user_id, total_games, wins, losses, draws, win_rate) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE total_games = total_games + 1, wins = wins + VALUES(wins), losses = losses + VALUES(losses), draws = draws + VALUES(draws), win_rate = (wins / total_games) * 100";
 
-				if (win)
-					wins++;
-				if (lose)
-					losses++;
-				if (draw)
-					draws++;
+	        PreparedStatement upsertPs = conn.prepareStatement(upsertQuery);
+	        upsertPs.setInt(1, userId);
+	        upsertPs.setInt(2, totalGames);
+	        upsertPs.setInt(3, wins);
+	        upsertPs.setInt(4, losses);
+	        upsertPs.setInt(5, draws);
+	        upsertPs.setFloat(6, ((float) wins) / totalGames * 100); 
 
-				float winRate = ((float) wins) / totalGames * 100;
+	        upsertPs.executeUpdate();
+	        upsertPs.close();
 
-				String updateQuery = "UPDATE game_records SET total_games=?, wins=?, losses=?, draws=?, win_rate=? WHERE user_id=?";
-				PreparedStatement updatePs = conn.prepareStatement(updateQuery);
-				updatePs.setInt(1, totalGames);
-				updatePs.setInt(2, wins);
-				updatePs.setInt(3, losses);
-				updatePs.setInt(4, draws);
-				updatePs.setFloat(5, winRate);
-				updatePs.setInt(6, userId);
-				updatePs.executeUpdate();
-			} else {
-
-				int totalGames = 1;
-				int wins = win ? 1 : 0;
-				int losses = lose ? 1 : 0;
-				int draws = draw ? 1 : 0;
-				float winRate = ((float) wins) / totalGames * 100;
-
-				String insertQuery = "INSERT INTO game_records (user_id, total_games, wins, losses, draws, win_rate) VALUES (?, ?, ?, ?, ?, ?)";
-				PreparedStatement insertPs = conn.prepareStatement(insertQuery);
-				insertPs.setInt(1, userId);
-				insertPs.setInt(2, totalGames);
-				insertPs.setInt(3, wins);
-				insertPs.setInt(4, losses);
-				insertPs.setInt(5, draws);
-				insertPs.setFloat(6, winRate);
-				insertPs.executeUpdate();
-				insertPs.close();
-			}
-
-			rs.close();
-			ps.close();
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 
 	public void deleteUser(String userId) {
