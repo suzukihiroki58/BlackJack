@@ -22,6 +22,12 @@ public class AccountsDAO {
 	private static final String DB_USERNAME = "1";
 	private static final String DB_PASSWORD = "1234";
 
+	public int totalGames;
+	public int wins;
+	public int losses;
+	public int draws;
+	public float winRate;
+
 	private String generateSalt() {
 		SecureRandom random = new SecureRandom();
 		byte[] salt = new byte[16];
@@ -114,33 +120,42 @@ public class AccountsDAO {
 
 		return account;
 	}
-	
+
+	public AccountsDAO calculateGameStats(boolean win, boolean lose, boolean draw) {
+		AccountsDAO stats = new AccountsDAO();
+
+		stats.wins = win ? 1 : 0;
+		stats.losses = lose ? 1 : 0;
+		stats.draws = draw ? 1 : 0;
+		stats.totalGames = 1;
+		stats.winRate = ((float) stats.wins) / stats.totalGames * 100;
+
+		return stats;
+	}
+
 	public void updateGameRecords(int userId, boolean win, boolean lose, boolean draw) {
-	    try {
-	        Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+		try {
+			Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 
-	        int wins = win ? 1 : 0;
-	        int losses = lose ? 1 : 0;
-	        int draws = draw ? 1 : 0;
-	        int totalGames = 1;
+			AccountsDAO stats = calculateGameStats(win, lose, draw);
 
-	        String upsertQuery = "INSERT INTO game_records (user_id, total_games, wins, losses, draws, win_rate) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE total_games = total_games + 1, wins = wins + VALUES(wins), losses = losses + VALUES(losses), draws = draws + VALUES(draws), win_rate = (wins / total_games) * 100";
+			String upsertQuery = "INSERT INTO game_records (user_id, total_games, wins, losses, draws, win_rate) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE total_games = total_games + 1, wins = wins + VALUES(wins), losses = losses + VALUES(losses), draws = draws + VALUES(draws), win_rate = (wins / total_games) * 100";
 
-	        PreparedStatement upsertPs = conn.prepareStatement(upsertQuery);
-	        upsertPs.setInt(1, userId);
-	        upsertPs.setInt(2, totalGames);
-	        upsertPs.setInt(3, wins);
-	        upsertPs.setInt(4, losses);
-	        upsertPs.setInt(5, draws);
-	        upsertPs.setFloat(6, ((float) wins) / totalGames * 100); 
+			PreparedStatement upsertPs = conn.prepareStatement(upsertQuery);
+			upsertPs.setInt(1, userId);
+			upsertPs.setInt(2, stats.totalGames);
+			upsertPs.setInt(3, stats.wins);
+			upsertPs.setInt(4, stats.losses);
+			upsertPs.setInt(5, stats.draws);
+			upsertPs.setFloat(6, stats.winRate);
 
-	        upsertPs.executeUpdate();
-	        upsertPs.close();
+			upsertPs.executeUpdate();
+			upsertPs.close();
 
-	        conn.close();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void deleteUser(String userId) {
@@ -289,23 +304,22 @@ public class AccountsDAO {
 
 		return accounts;
 	}
-	
+
 	public boolean isUserNameExists(String userName) {
-	    boolean exists = false;
-	    try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
-	        String sql = "SELECT USERNAME FROM USERS WHERE USERNAME = ?";
-	        PreparedStatement pStmt = conn.prepareStatement(sql);
-	        pStmt.setString(1, userName);
+		boolean exists = false;
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+			String sql = "SELECT USERNAME FROM USERS WHERE USERNAME = ?";
+			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt.setString(1, userName);
 
-	        ResultSet rs = pStmt.executeQuery();
-	        if (rs.next()) {
-	            exists = true;
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return exists;
+			ResultSet rs = pStmt.executeQuery();
+			if (rs.next()) {
+				exists = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return exists;
 	}
-
 
 }
