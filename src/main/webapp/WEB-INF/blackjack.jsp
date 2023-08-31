@@ -53,7 +53,8 @@ if (game == null) {
 			String resultMessage, int playerTotal, int dealerTotal) {
 		try {
 			dao.AccountsDAO dao = new dao.AccountsDAO();
-			dao.updateGameRecords(Integer.parseInt(loginUser.getUserId()), win, lose, draw);
+			GameRecord gameRecord = new GameRecord(String.valueOf(loginUser.getUserId()), win ? 1 : 0, lose ? 1 : 0, draw ? 1 : 0);
+			dao.updateGameRecords(gameRecord);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

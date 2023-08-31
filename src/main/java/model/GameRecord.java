@@ -12,6 +12,13 @@ public class GameRecord {
 	public GameRecord() {
 	}
 
+	public GameRecord(String userId, int wins, int losses, int draws) {
+		this.userId = userId;
+		this.wins = wins;
+		this.losses = losses;
+		this.draws = draws;
+	}
+
 	public String getUserId() {
 		return userId;
 	}
