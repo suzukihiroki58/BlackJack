@@ -106,13 +106,9 @@ public class AccountsDAO {
 				String storedSalt = rs.getString("SALT");
 				String nickname = rs.getString("NICKNAME");
 				String role = rs.getString("ROLE");
-				
-				String computedHash = hashPassword(userCredential.getPassword(), storedSalt);
 
 				if (storedHash.equals(hashPassword(userCredential.getPassword(), storedSalt))) {
-					
-					account = new Account(userId, userName, storedHash, storedSalt, nickname);
-	                
+					account = new Account(userId, userName, storedHash, storedSalt, nickname, role);
 					userCredential.setUserId(userId);
 					userCredential.setRole(role);
 				}
@@ -125,28 +121,31 @@ public class AccountsDAO {
 		return account;
 	}
 
-	public AccountsDAO calculateGameStats(boolean win, boolean lose, boolean draw) {
+	public AccountsDAO calculateGameStats(GameRecord gameRecord) {
 		AccountsDAO stats = new AccountsDAO();
 
-		stats.wins = win ? 1 : 0;
-		stats.losses = lose ? 1 : 0;
-		stats.draws = draw ? 1 : 0;
-		stats.totalGames = 1;
-		stats.winRate = ((float) stats.wins) / stats.totalGames * 100;
-
+		stats.wins = gameRecord.getWins();
+		stats.losses = gameRecord.getLosses();
+		stats.draws = gameRecord.getDraws();
+		stats.totalGames = gameRecord.getTotalGames();
+		if (stats.totalGames != 0) {
+			stats.winRate = ((float) stats.wins) / stats.totalGames * 100;
+		} else {
+			stats.winRate = 0;
+		}
 		return stats;
 	}
 
-	public void updateGameRecords(int userId, boolean win, boolean lose, boolean draw) {
+	public void updateGameRecords(GameRecord gameRecord) {
 		try {
 			Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 
-			AccountsDAO stats = calculateGameStats(win, lose, draw);
+			AccountsDAO stats = calculateGameStats(gameRecord);
 
 			String upsertQuery = "INSERT INTO game_records (user_id, total_games, wins, losses, draws, win_rate) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE total_games = total_games + 1, wins = wins + VALUES(wins), losses = losses + VALUES(losses), draws = draws + VALUES(draws), win_rate = (wins / total_games) * 100";
 
 			PreparedStatement upsertPs = conn.prepareStatement(upsertQuery);
-			upsertPs.setInt(1, userId);
+			upsertPs.setString(1, gameRecord.getUserId());
 			upsertPs.setInt(2, stats.totalGames);
 			upsertPs.setInt(3, stats.wins);
 			upsertPs.setInt(4, stats.losses);
@@ -294,7 +293,13 @@ public class AccountsDAO {
 
 			while (rs.next()) {
 				accounts.add(
-						new Account(sql, sql, sql, sql, sql, sql));
+						new Account(
+								rs.getString("USER_ID"),
+								rs.getString("USERNAME"),
+								rs.getString("HASHED_PASSWORD"),
+								rs.getString("SALT"),
+								rs.getString("NICKNAME"),
+								rs.getString("ROLE")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
