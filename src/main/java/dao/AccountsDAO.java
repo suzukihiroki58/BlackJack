@@ -48,11 +48,11 @@ public class AccountsDAO {
 		return generatedPassword;
 	}
 
-	public boolean isUserRegisteredSuccessfully(String userName, String password, String nickname) {
+	public boolean isUserRegisteredSuccessfully(Account account) {
 		boolean isSuccess = false;
 
 		String salt = generateSalt();
-		String hashedPassword = hashPassword(password, salt);
+		String hashedPassword = hashPassword(account.getHashedPassword(), salt);
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -65,10 +65,10 @@ public class AccountsDAO {
 		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 				PreparedStatement pStmt = conn.prepareStatement(sql)) {
 
-			pStmt.setString(1, userName);
+			pStmt.setString(1, account.getUserName());
 			pStmt.setString(2, hashedPassword);
 			pStmt.setString(3, salt);
-			pStmt.setString(4, nickname);
+			pStmt.setString(4, account.getNickname());
 
 			int result = pStmt.executeUpdate();
 
@@ -106,9 +106,13 @@ public class AccountsDAO {
 				String storedSalt = rs.getString("SALT");
 				String nickname = rs.getString("NICKNAME");
 				String role = rs.getString("ROLE");
+				
+				String computedHash = hashPassword(userCredential.getPassword(), storedSalt);
 
 				if (storedHash.equals(hashPassword(userCredential.getPassword(), storedSalt))) {
-					account = new Account(userId, userName, storedHash, storedSalt, nickname, role);
+					
+					account = new Account(userId, userName, storedHash, storedSalt, nickname);
+	                
 					userCredential.setUserId(userId);
 					userCredential.setRole(role);
 				}
@@ -290,13 +294,7 @@ public class AccountsDAO {
 
 			while (rs.next()) {
 				accounts.add(
-						new Account(
-								rs.getString("USER_ID"),
-								rs.getString("USERNAME"),
-								rs.getString("HASHED_PASSWORD"),
-								rs.getString("SALT"),
-								rs.getString("NICKNAME"),
-								rs.getString("ROLE")));
+						new Account(sql, sql, sql, sql, sql, sql));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

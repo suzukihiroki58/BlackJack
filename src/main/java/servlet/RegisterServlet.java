@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dao.AccountsDAO;
+import model.Account;
 
 @WebServlet("/RegisterServlet")
 public class RegisterServlet extends HttpServlet {
@@ -45,8 +46,10 @@ public class RegisterServlet extends HttpServlet {
 			dispatcher.forward(request, response);
 			return;
 		}
+		
+		Account newAccount = new Account(userName, password, nickname);
 
-		boolean isRegistered = accountsDAO.isUserRegisteredSuccessfully(userName, password, nickname);
+		boolean isRegistered = accountsDAO.isUserRegisteredSuccessfully(newAccount);
 
 		if (isRegistered) {
 			HttpSession session = request.getSession();
