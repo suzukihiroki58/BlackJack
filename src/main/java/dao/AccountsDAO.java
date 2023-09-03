@@ -62,8 +62,11 @@ public class AccountsDAO {
 
 		String sql = "INSERT INTO USERS (USERNAME, HASHED_PASSWORD, SALT, NICKNAME) VALUES (?, ?, ?, ?)";
 
-		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-				PreparedStatement pStmt = conn.prepareStatement(sql)) {
+		Connection conn = null;
+		PreparedStatement pStmt = null;
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+			pStmt = conn.prepareStatement(sql);
 
 			pStmt.setString(1, account.getUserName());
 			pStmt.setString(2, hashedPassword);
@@ -78,8 +81,16 @@ public class AccountsDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (pStmt != null)
+					pStmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-
 		return isSuccess;
 	}
 
@@ -92,12 +103,16 @@ public class AccountsDAO {
 			throw new IllegalStateException("JDBCドライバを読み込めませんでした");
 		}
 
-		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+		Connection conn = null;
+		PreparedStatement pStmt = null;
+		ResultSet rs = null;
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 			String sql = "SELECT USER_ID, USERNAME, HASHED_PASSWORD, SALT, NICKNAME, ROLE FROM USERS WHERE USERNAME = ?";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1, userCredential.getUserName());
 
-			ResultSet rs = pStmt.executeQuery();
+			rs = pStmt.executeQuery();
 
 			if (rs.next()) {
 				String userId = rs.getString("USER_ID");
@@ -116,6 +131,17 @@ public class AccountsDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pStmt != null)
+					pStmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return account;
@@ -137,14 +163,24 @@ public class AccountsDAO {
 	}
 
 	public void updateGameRecords(GameRecord gameRecord) {
+		Connection conn = null;
+		PreparedStatement upsertPs = null;
+
 		try {
-			Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 
 			AccountsDAO stats = calculateGameStats(gameRecord);
 
-			String upsertQuery = "INSERT INTO game_records (user_id, total_games, wins, losses, draws, win_rate) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE total_games = total_games + 1, wins = wins + VALUES(wins), losses = losses + VALUES(losses), draws = draws + VALUES(draws), win_rate = (wins / total_games) * 100";
+			String upsertQuery = "INSERT INTO game_records (user_id, total_games, wins, losses, draws, win_rate) "
+					+ "VALUES (?, ?, ?, ?, ?, ?) "
+					+ "ON DUPLICATE KEY UPDATE "
+					+ "total_games = total_games + 1, "
+					+ "wins = wins + VALUES(wins), "
+					+ "losses = losses + VALUES(losses), "
+					+ "draws = draws + VALUES(draws), "
+					+ "win_rate = (wins / total_games) * 100";
 
-			PreparedStatement upsertPs = conn.prepareStatement(upsertQuery);
+			upsertPs = conn.prepareStatement(upsertQuery);
 			upsertPs.setString(1, gameRecord.getUserId());
 			upsertPs.setInt(2, stats.totalGames);
 			upsertPs.setInt(3, stats.wins);
@@ -153,11 +189,19 @@ public class AccountsDAO {
 			upsertPs.setFloat(6, stats.winRate);
 
 			upsertPs.executeUpdate();
-			upsertPs.close();
-
-			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (upsertPs != null) {
+					upsertPs.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -174,16 +218,16 @@ public class AccountsDAO {
 			statement.setString(1, userId);
 
 			statement.executeUpdate();
-		} catch (SQLException | ClassNotFoundException ex) {
-			ex.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				if (connection != null)
 					connection.close();
-			} catch (SQLException ex) {
-				ex.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -197,12 +241,17 @@ public class AccountsDAO {
 			throw new IllegalStateException("JDBCドライバを読み込めませんでした");
 		}
 
-		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+		Connection conn = null;
+		PreparedStatement pStmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 			String sql = "SELECT total_games, wins, losses, draws, win_rate FROM game_records WHERE user_id = ?";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1, userId);
 
-			ResultSet rs = pStmt.executeQuery();
+			rs = pStmt.executeQuery();
 
 			if (rs.next()) {
 				record = new GameRecord();
@@ -212,8 +261,23 @@ public class AccountsDAO {
 				record.setDraws(rs.getInt("draws"));
 				record.setWinrate(rs.getInt("win_rate"));
 			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pStmt != null) {
+					pStmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return record;
@@ -232,16 +296,16 @@ public class AccountsDAO {
 			statement.setString(1, userId);
 
 			statement.executeUpdate();
-		} catch (SQLException | ClassNotFoundException ex) {
-			ex.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
 		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				if (connection != null)
 					connection.close();
-			} catch (SQLException ex) {
-				ex.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -255,14 +319,19 @@ public class AccountsDAO {
 			throw new IllegalStateException("JDBCドライバを読み込めませんでした");
 		}
 
-		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+		Connection conn = null;
+		PreparedStatement pStmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 			String sql = "SELECT g.user_id, u.USERNAME, g.total_games, g.wins, g.losses, g.draws, g.win_rate " +
 					"FROM game_records g " +
 					"JOIN USERS u ON g.user_id = u.USER_ID " +
 					"ORDER BY g.win_rate DESC";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt = conn.prepareStatement(sql);
 
-			ResultSet rs = pStmt.executeQuery();
+			rs = pStmt.executeQuery();
 
 			while (rs.next()) {
 				GameRecord record = new GameRecord();
@@ -277,6 +346,20 @@ public class AccountsDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pStmt != null) {
+					pStmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return records;
@@ -285,11 +368,15 @@ public class AccountsDAO {
 	public List<Account> getAllUsers() {
 		List<Account> accounts = new ArrayList<>();
 
-		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
-			String sql = "SELECT USER_ID, USERNAME, NICKNAME, ROLE FROM USERS";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+		Connection conn = null;
+		PreparedStatement pStmt = null;
+		ResultSet rs = null;
 
-			ResultSet rs = pStmt.executeQuery();
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+			String sql = "SELECT USER_ID, USERNAME, NICKNAME, ROLE FROM USERS";
+			pStmt = conn.prepareStatement(sql);
+			rs = pStmt.executeQuery();
 
 			while (rs.next()) {
 				accounts.add(
@@ -303,6 +390,17 @@ public class AccountsDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pStmt != null)
+					pStmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return accounts;
@@ -310,18 +408,35 @@ public class AccountsDAO {
 
 	public boolean isUserNameExists(String userName) {
 		boolean exists = false;
-		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+		Connection conn = null;
+		PreparedStatement pStmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 			String sql = "SELECT USERNAME FROM USERS WHERE USERNAME = ?";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1, userName);
 
-			ResultSet rs = pStmt.executeQuery();
+			rs = pStmt.executeQuery();
 			if (rs.next()) {
 				exists = true;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pStmt != null)
+					pStmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
+
 		return exists;
 	}
 
