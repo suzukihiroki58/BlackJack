@@ -1,5 +1,8 @@
 package dao;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -11,22 +14,60 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Properties;
 
+import config.DatabaseConfig;
 import model.Account;
 import model.GameRecord;
 import model.UserCredential;
 
 public class AccountsDAO {
 
-	private static final String DB_URL = "jdbc:mysql://localhost/BlackJack";
-	private static final String DB_USERNAME = "1";
-	private static final String DB_PASSWORD = "1234";
-
+	private static String DB_URL;
+	private static String DB_USERNAME;
+	private static String DB_PASSWORD;
+	
 	public int totalGames;
 	public int wins;
 	public int losses;
 	public int draws;
 	public float winRate;
+
+	static {
+	    Properties prop = new Properties();
+	    InputStream input = null;
+
+	    try {
+	        input = AccountsDAO.class.getClassLoader().getResourceAsStream("db.properties");
+	        if (input == null) {
+	            throw new FileNotFoundException("db.propertiesファイルが見つかりません");
+	        }
+	        prop.load(input);
+	        DB_URL = prop.getProperty("db.url");
+	        DB_USERNAME = prop.getProperty("db.username");
+	        DB_PASSWORD = prop.getProperty("db.password");
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } finally {
+	        if (input != null) {
+	            try {
+	                input.close();
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	}
+
+	public Connection getConnection() {
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return conn;
+	}
 
 	private String generateSalt() {
 		SecureRandom random = new SecureRandom();
@@ -107,7 +148,8 @@ public class AccountsDAO {
 		PreparedStatement pStmt = null;
 		ResultSet rs = null;
 		try {
-			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+			conn = DriverManager.getConnection(DatabaseConfig.DB_URL, DatabaseConfig.DB_USERNAME,
+					DatabaseConfig.DB_PASSWORD);
 			String sql = "SELECT USER_ID, USERNAME, HASHED_PASSWORD, SALT, NICKNAME, ROLE FROM USERS WHERE USERNAME = ?";
 			pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1, userCredential.getUserName());
