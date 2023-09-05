@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.AccountsDAO;
+import dao.UsersDAO;
 import model.Account;
 
 @WebServlet("/RegisterServlet")
@@ -36,7 +36,7 @@ public class RegisterServlet extends HttpServlet {
 		System.out.println("Password: " + password);
 		System.out.println("Nickname: " + nickname);
 
-		AccountsDAO accountsDAO = new AccountsDAO();
+		UsersDAO accountsDAO = new UsersDAO();
 
 		boolean userNameExists = accountsDAO.isUserNameExists(userName);
 

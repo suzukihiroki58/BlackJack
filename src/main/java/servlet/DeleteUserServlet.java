@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.AccountsDAO;
+import dao.UsersDAO;
 import model.BlackjackGame;
 import model.UserCredential;
 
@@ -30,7 +30,7 @@ public class DeleteUserServlet extends HttpServlet {
 			UserCredential loggedInUser = (UserCredential) session.getAttribute("loginUser");
 
 			if (loggedInUser != null) {
-				AccountsDAO dbManager = new AccountsDAO();
+				UsersDAO dbManager = new UsersDAO();
 				dbManager.deleteUser(loggedInUser.getUserName());
 
 				session.invalidate();

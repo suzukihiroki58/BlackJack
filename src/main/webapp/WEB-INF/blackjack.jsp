@@ -52,7 +52,7 @@ if (game == null) {
 	private String updateGameRecordsAndReturnMessage(UserCredential loginUser, boolean win, boolean lose, boolean draw,
 			String resultMessage, int playerTotal, int dealerTotal) {
 		try {
-			dao.AccountsDAO dao = new dao.AccountsDAO();
+			dao.GameRecordsDAO dao = new dao.GameRecordsDAO();
 			GameRecord gameRecord = new GameRecord(String.valueOf(loginUser.getUserId()), win ? 1 : 0, lose ? 1 : 0, draw ? 1 : 0);
 			dao.updateGameRecords(gameRecord);
 		} catch (Exception e) {

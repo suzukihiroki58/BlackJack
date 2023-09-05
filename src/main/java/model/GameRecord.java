@@ -7,7 +7,7 @@ public class GameRecord {
 	private int wins;
 	private int losses;
 	private int draws;
-	private int winRate;
+	private float winRate;
 
 	public GameRecord() {
 	}
@@ -67,11 +67,11 @@ public class GameRecord {
 		this.draws = draws;
 	}
 
-	public int getWinrate() {
+	public float getWinRate() {
 		return winRate;
 	}
 
-	public void setWinrate(int winRate) {
+	public void setWinRate(float winRate) {
 		this.winRate = winRate;
 	}
 }
