@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.AccountsDAO;
+import dao.GameRecordsDAO;
 import model.GameRecord;
 
 @WebServlet("/MyRecordServlet")
@@ -27,7 +27,7 @@ public class MyRecordServlet extends HttpServlet {
 
 		System.out.println("DEBUG: userId = " + userId);
 
-		AccountsDAO dao = new AccountsDAO();
+		GameRecordsDAO dao = new GameRecordsDAO();
 
 		GameRecord record = dao.getUserRecords(userId);
 
@@ -36,7 +36,7 @@ public class MyRecordServlet extends HttpServlet {
 			request.setAttribute("wins", record.getWins());
 			request.setAttribute("losses", record.getLosses());
 			request.setAttribute("draws", record.getDraws());
-			request.setAttribute("winRate", record.getWinrate());
+			request.setAttribute("winRate", record.getWinRate());
 
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/myrecord.jsp");
 			dispatcher.forward(request, response);

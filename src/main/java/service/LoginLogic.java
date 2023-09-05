@@ -1,12 +1,12 @@
 package service;
 
-import dao.AccountsDAO;
+import dao.UsersDAO;
 import model.Account;
 import model.UserCredential;
 
 public class LoginLogic {
 	public boolean execute(UserCredential login) {
-		AccountsDAO dao = new AccountsDAO();
+		UsersDAO dao = new UsersDAO();
 		Account account = dao.findAccountByUserNameAndPassword(login);
 		return account != null;
 	}

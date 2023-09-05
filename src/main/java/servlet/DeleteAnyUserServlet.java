@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.AccountsDAO;
+import dao.UsersDAO;
 
 @WebServlet("/DeleteAnyUserServlet")
 public class DeleteAnyUserServlet extends HttpServlet {
@@ -18,8 +18,8 @@ public class DeleteAnyUserServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String userId = request.getParameter("userId");
 
-		AccountsDAO dao = new AccountsDAO();
-		dao.deleteGameRecords(userId);
+		UsersDAO dao = new UsersDAO();
+//		dao.deleteGameRecords(userId);
 		dao.deleteUser(userId);
 
 		response.sendRedirect("AdminServlet");

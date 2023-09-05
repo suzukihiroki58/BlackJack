@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="model.GameRecord, java.util.List, dao.AccountsDAO" %>
+<%@ page import="model.GameRecord, java.util.List, dao.GameRecordsDAO" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +9,7 @@
 <body>
 
 <%
-AccountsDAO dao = new AccountsDAO();
+GameRecordsDAO dao = new GameRecordsDAO();
 List<GameRecord> records = dao.getAllUserRecords();
 %>
 
@@ -34,7 +34,7 @@ List<GameRecord> records = dao.getAllUserRecords();
         <td><%= record.getWins() %></td>
         <td><%= record.getLosses() %></td>
         <td><%= record.getDraws() %></td>
-        <td><%= record.getWinrate() %> %</td>
+        <td><%= record.getWinRate() %> %</td>
     </tr>
     <% }
     } %>
