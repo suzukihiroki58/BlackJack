@@ -131,7 +131,7 @@ public class UsersDAO extends BaseDAO {
 
 		try {
 			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-			String sql = "SELECT USER_ID, USERNAME, NICKNAME, ROLE FROM USERS";
+			String sql = "SELECT * FROM USERS";
 			pStmt = conn.prepareStatement(sql);
 			rs = pStmt.executeQuery();
 

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.UserCredential;
-import service.LoginLogic;
+import service.UserFacade;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -32,8 +32,8 @@ public class LoginServlet extends HttpServlet {
 		String password = request.getParameter("password");
 
 		UserCredential userCredential = new UserCredential(userName, password);
-		LoginLogic bo = new LoginLogic();
-		boolean result = bo.execute(userCredential);
+		UserFacade facade = new UserFacade();
+		boolean result = facade.authenticate(userCredential);
 
 		if (result) {
 			HttpSession session = request.getSession();
