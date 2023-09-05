@@ -9,9 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.UsersDAO;
 import model.BlackjackGame;
-import model.UserCredential;
+import service.UserFacade;
 
 @WebServlet("/DeleteUserServlet")
 public class DeleteUserServlet extends HttpServlet {
@@ -26,18 +25,14 @@ public class DeleteUserServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		if (session != null) {
-			UserCredential loggedInUser = (UserCredential) session.getAttribute("loginUser");
+		UserFacade userFacade = new UserFacade();
+		boolean success = userFacade.deleteUserIfLoggedIn(session);
 
-			if (loggedInUser != null) {
-				UsersDAO dbManager = new UsersDAO();
-				dbManager.deleteUser(loggedInUser.getUserName());
-
-				session.invalidate();
-				response.sendRedirect("WelcomeServlet?message=UserDeleted");
-				return;
-			}
+		if (success) {
+			response.sendRedirect("WelcomeServlet?message=UserDeleted");
+		} else {
+			response.sendRedirect("DeleteUserServlet");
 		}
-		response.sendRedirect("DeleteUserServlet");
+
 	}
 }
