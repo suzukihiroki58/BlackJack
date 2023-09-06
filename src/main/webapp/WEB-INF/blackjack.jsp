@@ -2,66 +2,13 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="model.*"%>
 <%@ page import="java.util.List"%>
+<%@ page import="service.BlackjackGameFacade"%>
 
 <%
-UserCredential loginUser = (UserCredential) session.getAttribute("loginUser");
+BlackjackGameFacade gameFacade = new BlackjackGameFacade();
+UserCredential loginUser = gameFacade.getOrCreateLoginUser(session);
+BlackjackGame game = gameFacade.getOrCreateGame(session);
 %>
-
-<%
-BlackjackGame game = (BlackjackGame) session.getAttribute("game");
-if (game == null) {
-	game = new BlackjackGame();
-	session.setAttribute("game", game);
-}
-%>
-
-<%!public String checkWinner(BlackjackGame game, UserCredential loginUser) {
-		int playerTotal = game.getPlayer().getHandTotal();
-		int dealerTotal = game.getDealer().getHandTotal();
-
-		boolean win = false;
-		boolean lose = false;
-		boolean draw = false;
-
-		String resultMessage = "";
-
-		if (playerTotal > 21 && dealerTotal > 21) {
-			draw = true;
-			resultMessage = "両者バーストにより、引き分け";
-		} else if (playerTotal > 21) {
-			lose = true;
-			resultMessage = "プレイヤーのバーストにより、ディーラーの勝利";
-			updateGameRecordsAndReturnMessage(loginUser, win, lose, draw, resultMessage, playerTotal, dealerTotal);
-			return resultMessage;
-		} else if (dealerTotal > 21) {
-			win = true;
-			resultMessage = "ディーラーのバーストにより、プレイヤーの勝利";
-		} else if (playerTotal > dealerTotal) {
-			win = true;
-			resultMessage = "プレイヤーの勝利";
-		} else if (dealerTotal > playerTotal) {
-			lose = true;
-			resultMessage = "ディーラーの勝利";
-		} else {
-			draw = true;
-			resultMessage = "引き分け";
-		}
-		return updateGameRecordsAndReturnMessage(loginUser, win, lose, draw, resultMessage, playerTotal, dealerTotal);
-	}
-
-	private String updateGameRecordsAndReturnMessage(UserCredential loginUser, boolean win, boolean lose, boolean draw,
-			String resultMessage, int playerTotal, int dealerTotal) {
-		try {
-			dao.GameRecordsDAO dao = new dao.GameRecordsDAO();
-			GameRecord gameRecord = new GameRecord(String.valueOf(loginUser.getUserId()), win ? 1 : 0, lose ? 1 : 0, draw ? 1 : 0);
-			dao.updateGameRecords(gameRecord);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return resultMessage;
-
-	}%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -124,7 +71,7 @@ if (game == null) {
 		<%
 		} else {
 		%>
-		<%=checkWinner(game, loginUser)%>
+		<%=gameFacade.checkWinner(game, loginUser)%>
 		<%--   <% session.removeAttribute("game"); %> --%>
 		<br> <br> <a href="BlackjackServlet">再プレイ</a> <a
 			href="MenuServlet">メニューへ戻る</a>

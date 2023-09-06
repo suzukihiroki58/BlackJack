@@ -8,6 +8,9 @@ public class UserCredential {
 	private String password;
 
 	private String role;
+	
+	public UserCredential() {
+	}
 
 	public UserCredential(String userName, String password) {
 		this.userName = userName;
