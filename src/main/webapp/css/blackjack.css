@@ -1,3 +1,35 @@
+button {
+	background-color: black;
+	color: #fff;
+	border: none;
+	padding: 10px;
+	margin: 5px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #0056b3;
+}
+
+.player-hand img,
+.dealer-hand img {
+	width: 120px;
+	height: auto;
+	margin: 5px;
+}
+
+.dealer {
+	position: relative;
+}
+
+.dealer-character {
+	position: absolute;
+	top: 50px;
+	left: 50px;
+	width: 100px;
+	height: auto;
+}
+
 body {
 	background-image: url("/blackjack/images/blackjack_background.jpg");
 	background-size: cover;
@@ -33,13 +65,6 @@ body {
 	margin: 0;
 	font-size: 2rem;
 }
-
-.game-title {
-	color: white;
-	font-size: 4rem;
-	text-shadow: 2px 2px 4px black;
-}
-
 
 .header-link-left {
 	color: white;
@@ -82,62 +107,31 @@ body {
 .container {
 	max-width: 90%;
 	padding: 20px;
+	margin-top: -250px;
 }
 
-
-.container-adjustment {
-	max-width: 90%;
-	padding: 20px;
-	margin-top: -140px;
-}
-
-.menu {
-	list-style: none;
-	padding: 0;
-}
-
-.menu-link {
-	font-size: XX-large;
-	text-decoration: none;
-	color: #333;
-	display: block;
-	padding: 10px;
-	border-bottom: 1px solid white;
-	color: white;
-	font-weight: bold;
+.large-white-text {
+	font-size: 2.5rem;
+	color: #ffffff;
 	text-shadow: 2px 2px 4px black;
+	font-weight: bold;
 }
 
-.menu-link:hover {
+.large-white-text-replay {
+	font-size: 2.5rem;
+	color: #ffffff;
+	text-shadow: 2px 2px 4px black;
+	border-bottom: 1px solid white;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.large-white-text-replay:hover {
 	border-radius: 30px;
 	background-color: lightslategrey;
 }
 
-.message {
-	font-size: XX-large;
-	text-decoration: none;
-	display: block;
-	padding: 10px;
-	color: #333333;
-	font-weight: bold;
-	text-shadow: 2px 2px 4px white;
-}
-
-form {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-}
-
-input[type="text"],
-input[type="password"] {
-	margin-bottom: 10px;
-	padding: 5px;
-	font-size: 2.5rem;
-	height: auto;
-}
-
-input[type="submit"] {
+.game-button {
 	padding: 10px 20px;
 	background-color: lightslategrey;
 	color: white;
@@ -147,19 +141,8 @@ input[type="submit"] {
 	font-size: 2rem;
 }
 
-input[type="submit"]:hover {
+.game-button:hover {
 	background-color: #333333;
-}
-
-.label-text {
-	color: white;
-	text-shadow: 2px 2px 4px black;
-	font-size: 2.5rem;
-	font-weight: bold;
-}
-
-.password-input {
-	width: 495px;
 }
 
 .footer {
@@ -175,46 +158,4 @@ input[type="submit"]:hover {
 .copyright {
 	text-align: right;
 	margin-right: 3%;
-}
-
-.nickname-input {
-	margin-bottom: 10px;
-	padding: 5px;
-	font-size: 2.5rem;
-	height: auto;
-	width: 455px;
-}
-
-.styled-text {
-	color: white;
-	text-shadow: 2px 2px 4px black;
-	font-size: 2.5rem;
-	font-weight: bold;
-}
-
-.styled-table {
-	width: 100%;
-	border-collapse: separate;
-	border-spacing: 0;
-}
-
-.styled-table thead,
-.styled-table th,
-.styled-table td {
-	border: 2px solid white;
-	padding: 20px;
-	color: white;
-	text-shadow: 2px 2px 4px black;
-	font-size: 2rem;
-	font-weight: bold;
-}
-
-.styled-table {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-.scrollable-container {
-	height: 600px;
-	overflow-y: auto;
 }

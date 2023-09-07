@@ -8,7 +8,7 @@ public class UserCredential {
 	private String password;
 
 	private String role;
-	
+
 	public UserCredential() {
 	}
 
