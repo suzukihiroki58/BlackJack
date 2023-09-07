@@ -58,8 +58,6 @@ List<GameRecord> records = dao.getAllUserRecords();
 					<td><%=record.getWinRate()%> %</td>
 				</tr>
 				<%
-				p
-
 				}
 				}
 				%>

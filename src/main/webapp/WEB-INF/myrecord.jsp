@@ -37,7 +37,7 @@
 						<td><%= request.getAttribute("wins") %></td>
 						<td><%= request.getAttribute("losses") %></td>
 						<td><%= request.getAttribute("draws") %></td>
-						<td><%=t(request.getAttribute("winRate"%>%</td>
+						<td><%= request.getAttribute("winRate")%></td>
 					</tr>
 				</tbody>
 			</table>
