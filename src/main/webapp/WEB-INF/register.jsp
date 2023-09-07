@@ -16,7 +16,7 @@
 			<% if (request.getAttribute("errorMessage") != null) { %>
 			<p class="message"><%= request.getAttribute("errorMessage") %></p>
 			<%
-			p
+			}
 			%>
 			<form action="RegisterServlet" method="post">
 				<div class="form-group">
