@@ -9,7 +9,7 @@ import model.BlackjackGame;
 import model.Card;
 import model.GameRecord;
 import model.UserCredential;
-
+a
 public class BlackjackGameFacade {
 	public BlackjackGame initializeGame() {
 		return new BlackjackGame();
