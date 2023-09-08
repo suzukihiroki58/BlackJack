@@ -21,18 +21,20 @@ public class BlackjackGameFacade {
 		} else if ("stand".equals(action)) {
 			game.playerStand();
 			boolean shouldDealerStand = false;
-			if (game.getDealer().getHand().size() == 2 && game.getDealer().getHandTotal() >= 17) {
+			if (game.getDealer().getHand(0).size() == 2 && game.getDealer().getHandTotal(0) >= 17) {
 				shouldDealerStand = true;
 			}
 			if (!shouldDealerStand) {
-				while (game.getDealer().getHandTotal() < 17) {
-					if (game.getDealer().getHandTotal() > 21) {
+				while (game.getDealer().getHandTotal(0) < 17) {
+					if (game.getDealer().getHandTotal(0) > 21) {
 						break;
 					}
-					game.getDealer().receiveCard(game.drawCard());
+					game.getDealer().receiveCard(game.drawCard(), 0);
 				}
 			}
-		}
+		} else if ("split".equals(action)) {
+	        performSplit(game);
+	    }
 	}
 
 	public BlackjackGame getOrCreateGame(HttpSession session) {
@@ -52,8 +54,8 @@ public class BlackjackGameFacade {
 	}
 
 	public String checkWinner(BlackjackGame game, UserCredential loginUser) {
-		int playerTotal = game.getPlayer().getHandTotal();
-		int dealerTotal = game.getDealer().getHandTotal();
+		int playerTotal = game.getPlayer().getHandTotal(0);
+		int dealerTotal = game.getDealer().getHandTotal(0);
 
 		boolean win = false;
 		boolean lose = false;
@@ -115,4 +117,8 @@ public class BlackjackGameFacade {
         Card secondCard = hand.get(1);
         return firstCard.getNumericValue() == secondCard.getNumericValue();
     }
+	
+	public void performSplit(BlackjackGame game) {
+		game.getPlayer().splitHand();
+	}
 }
