@@ -4,23 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-	private final List<Card> hand;
+	private final List<List<Card>> hands;
 
 	public Player() {
-		hand = new ArrayList<>();
+		hands = new ArrayList<>();
+		hands.add(new ArrayList<>());
 	}
 
-	public void receiveCard(Card card) {
-		hand.add(card);
+	public void receiveCard(Card card, int handIndex) {
+		hands.get(handIndex).add(card);
 	}
 
-	public List<Card> getHand() {
-		return hand;
+	public List<Card> getHand(int handIndex) {
+		return hands.get(handIndex);
+	}
+	
+	public List<List<Card>> getHands() {
+	    return hands;
 	}
 
-	public int getHandTotal() {
+	public int getHandTotal(int handIndex) {
 		int total = 0;
 		int aces = 0;
+		List<Card> hand = hands.get(handIndex);
 		for (Card card : hand) {
 			total += card.getNumericValue();
 			if ("ACE".equals(card.getValue())) {
@@ -37,11 +43,22 @@ public class Player {
 		return total;
 	}
 
-	public String describeHand() {
+	public String describeHand(int handIndex) {
 		StringBuilder builder = new StringBuilder();
+		List<Card> hand = hands.get(handIndex);
 		for (Card card : hand) {
 			builder.append(card.toString()).append("と");
 		}
 		return builder.substring(0, builder.length() - 1);
+	}
+	
+	public void splitHand() {
+	    if (hands.get(0).size() != 2) {
+	        return;
+	    }
+
+	    List<Card> newHand = new ArrayList<>();
+	    newHand.add(hands.get(0).remove(1));
+	    hands.add(newHand);
 	}
 }

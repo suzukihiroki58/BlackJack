@@ -8,7 +8,7 @@
 BlackjackGameFacade gameFacade = new BlackjackGameFacade();
 UserCredential loginUser = gameFacade.getOrCreateLoginUser(session);
 BlackjackGame game = gameFacade.getOrCreateGame(session);
-boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand());
+boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 %>
 
 <!DOCTYPE html>
@@ -36,7 +36,7 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand());
 				<div class="dealer-hand" id="dealer-hand">
 					<h2 class="large-white-text">ディーラーの手札</h2>
 					<%
-					List<Card> dealerHand = game.getDealer().getHand();
+					List<Card> dealerHand = game.getDealer().getHand(0);
 					%>
 					<%
 					for (int i = 0; i < dealerHand.size(); i++) {
@@ -57,10 +57,14 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand());
 					}
 					%>
 				</div>
+				<%
+				List<List<Card>> playerHands = game.getPlayer().getHands();
+				for (List<Card> hand : playerHands) {
+				%>
 				<div class="player-hand">
 					<h2 class="large-white-text">プレイヤーの手札</h2>
 					<%
-					for (Card card : game.getPlayer().getHand()) {
+					for (Card card : hand) {
 					%>
 					<img src="<%=card.getImagePath()%>"
 						alt="<%=card.getSuit()%> <%=card.getValue()%> " />
@@ -68,6 +72,9 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand());
 					}
 					%>
 				</div>
+				<%
+				}
+				%>
 			</div>
 
 			<%
