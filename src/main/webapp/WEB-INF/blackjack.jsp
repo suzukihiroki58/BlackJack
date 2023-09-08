@@ -8,6 +8,7 @@
 BlackjackGameFacade gameFacade = new BlackjackGameFacade();
 UserCredential loginUser = gameFacade.getOrCreateLoginUser(session);
 BlackjackGame game = gameFacade.getOrCreateGame(session);
+boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand());
 %>
 
 <!DOCTYPE html>
@@ -68,6 +69,7 @@ BlackjackGame game = gameFacade.getOrCreateGame(session);
 					%>
 				</div>
 			</div>
+
 			<%
 			if (!game.isGameOver()) {
 			%>
@@ -75,14 +77,21 @@ BlackjackGame game = gameFacade.getOrCreateGame(session);
 				<button type="submit" name="action" value="hit" class="game-button">ヒット</button>
 				<button type="submit" name="action" value="stand"
 					class="game-button">スタンド</button>
+				<%
+				if (canSplit) {
+				%>
+				<button type="submit" name="action" value="split"
+					class="game-button">スプリット</button>
+				<%
+				}
+				%>
 			</form>
 			<%
 			} else {
 			%>
 			<span class="large-white-text"><%=gameFacade.checkWinner(game, loginUser)%></span>
-			<br>
-			<br>
-			<a href="BlackjackServlet" class="large-white-text-replay">再プレイ</a>
+			<br> <br> <a href="BlackjackServlet"
+				class="large-white-text-replay">再プレイ</a>
 			<%
 			}
 			%>

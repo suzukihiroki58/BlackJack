@@ -1,12 +1,15 @@
 package service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import dao.GameRecordsDAO;
 import model.BlackjackGame;
+import model.Card;
 import model.GameRecord;
 import model.UserCredential;
-
+a
 public class BlackjackGameFacade {
 	public BlackjackGame initializeGame() {
 		return new BlackjackGame();
@@ -102,5 +105,14 @@ public class BlackjackGameFacade {
 			session.setAttribute("loginUser", loginUser);
 		}
 		return loginUser;
+	}
+
+	public boolean canSplit(List<Card> hand) {
+		if (hand.size() != 2) {
+			return false;
+		}
+		Card firstCard = hand.get(0);
+		Card secondCard = hand.get(1);
+		return firstCard.getNumericValue() == secondCard.getNumericValue();
 	}
 }
