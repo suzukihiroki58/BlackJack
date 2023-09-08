@@ -2,8 +2,8 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class Deck {
 	private final List<Card> cards;
@@ -22,14 +22,7 @@ public class Deck {
 	}
 
 	public void shuffle() {
-		Random random = new Random();
-		int shuffleCount = cards.size();
-		for (int i = 0; i < shuffleCount; i++) {
-			int swapIndex = random.nextInt(cards.size());
-			Card temp = cards.get(i);
-			cards.set(i, cards.get(swapIndex));
-			cards.set(swapIndex, temp);
-		}
+		Collections.shuffle(cards);
 	}
 
 	public Card drawCard() {
