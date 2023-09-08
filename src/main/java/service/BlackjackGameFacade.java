@@ -9,7 +9,7 @@ import model.BlackjackGame;
 import model.Card;
 import model.GameRecord;
 import model.UserCredential;
-a
+
 public class BlackjackGameFacade {
 	public BlackjackGame initializeGame() {
 		return new BlackjackGame();
@@ -21,17 +21,19 @@ public class BlackjackGameFacade {
 		} else if ("stand".equals(action)) {
 			game.playerStand();
 			boolean shouldDealerStand = false;
-			if (game.getDealer().getHand().size() == 2 && game.getDealer().getHandTotal() >= 17) {
+			if (game.getDealer().getHand(0).size() == 2 && game.getDealer().getHandTotal(0) >= 17) {
 				shouldDealerStand = true;
 			}
 			if (!shouldDealerStand) {
-				while (game.getDealer().getHandTotal() < 17) {
-					if (game.getDealer().getHandTotal() > 21) {
+				while (game.getDealer().getHandTotal(0) < 17) {
+					if (game.getDealer().getHandTotal(0) > 21) {
 						break;
 					}
-					game.getDealer().receiveCard(game.drawCard());
+					game.getDealer().receiveCard(game.drawCard(), 0);
 				}
 			}
+		} else if ("split".equals(action)) {
+			performSplit(game);
 		}
 	}
 
@@ -52,8 +54,8 @@ public class BlackjackGameFacade {
 	}
 
 	public String checkWinner(BlackjackGame game, UserCredential loginUser) {
-		int playerTotal = game.getPlayer().getHandTotal();
-		int dealerTotal = game.getDealer().getHandTotal();
+		int playerTotal = game.getPlayer().getHandTotal(0);
+		int dealerTotal = game.getDealer().getHandTotal(0);
 
 		boolean win = false;
 		boolean lose = false;
@@ -114,5 +116,9 @@ public class BlackjackGameFacade {
 		Card firstCard = hand.get(0);
 		Card secondCard = hand.get(1);
 		return firstCard.getNumericValue() == secondCard.getNumericValue();
+	}
+
+	public void performSplit(BlackjackGame game) {
+		game.getPlayer().splitHand();
 	}
 }
