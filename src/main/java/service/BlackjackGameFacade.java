@@ -33,8 +33,8 @@ public class BlackjackGameFacade {
 				}
 			}
 		} else if ("split".equals(action)) {
-	        performSplit(game);
-	    }
+			performSplit(game);
+		}
 	}
 
 	public BlackjackGame getOrCreateGame(HttpSession session) {
@@ -108,16 +108,16 @@ public class BlackjackGameFacade {
 		}
 		return loginUser;
 	}
-	
+
 	public boolean canSplit(List<Card> hand) {
-        if (hand.size() != 2) {
-            return false;
-        }
-        Card firstCard = hand.get(0);
-        Card secondCard = hand.get(1);
-        return firstCard.getNumericValue() == secondCard.getNumericValue();
-    }
-	
+		if (hand.size() != 2) {
+			return false;
+		}
+		Card firstCard = hand.get(0);
+		Card secondCard = hand.get(1);
+		return firstCard.getNumericValue() == secondCard.getNumericValue();
+	}
+
 	public void performSplit(BlackjackGame game) {
 		game.getPlayer().splitHand();
 	}
