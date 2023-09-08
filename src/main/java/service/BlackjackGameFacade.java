@@ -1,9 +1,12 @@
 package service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import dao.GameRecordsDAO;
 import model.BlackjackGame;
+import model.Card;
 import model.GameRecord;
 import model.UserCredential;
 
@@ -103,4 +106,13 @@ public class BlackjackGameFacade {
 		}
 		return loginUser;
 	}
+	
+	public boolean canSplit(List<Card> hand) {
+        if (hand.size() != 2) {
+            return false;
+        }
+        Card firstCard = hand.get(0);
+        Card secondCard = hand.get(1);
+        return firstCard.getNumericValue() == secondCard.getNumericValue();
+    }
 }
