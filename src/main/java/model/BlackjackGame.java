@@ -8,16 +8,10 @@ public class BlackjackGame {
 
 	public boolean isGameOver() {
 		if (playerStand) {
-			//デバッグ
-			System.out.println("プレイヤーの手札： " + player.describeHand(0) + "\nディーラーの手札： " + dealer.describeHand(0));
 			return true;
 		} else if (getPlayer().getHandTotal(0) > 21) {
-			//デバッグ
-			System.out.println("プレイヤーの手札： " + player.describeHand(0) + "\nディーラーの手札： " + dealer.describeHand(0));
 			return true;
 		} else if (getDealer().getHandTotal(0) > 21) {
-			//デバッグ
-			System.out.println("プレイヤーの手札： " + player.describeHand(0) + "\nディーラーの手札： " + dealer.describeHand(0));
 			return true;
 		}
 		return false;
@@ -28,8 +22,6 @@ public class BlackjackGame {
 		player = new Player();
 		dealer = new Player();
 		dealInitialCards();
-		//デバッグ
-		System.out.println("プレイヤーの手札： " + player.describeHand(0) + "\nディーラーの手札： " + dealer.describeHand(0));
 	}
 
 	public void dealInitialCards() {
@@ -51,8 +43,8 @@ public class BlackjackGame {
 		return deck.drawCard();
 	}
 
-	public void playerHit(int handIndex) {
-		player.playerHit(deck.drawCard(), handIndex);
+	public void playerHit(Card card, int handIndex) {
+		player.receiveCard(card, handIndex);
 	}
 
 	public void playerStand() {
