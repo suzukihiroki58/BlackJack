@@ -51,8 +51,8 @@ public class BlackjackGame {
 		return deck.drawCard();
 	}
 
-	public void playerHit() {
-		player.receiveCard(deck.drawCard(), 0);
+	public void playerHit(int handIndex) {
+		player.playerHit(deck.drawCard(), handIndex);
 	}
 
 	public void playerStand() {

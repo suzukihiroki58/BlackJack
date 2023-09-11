@@ -15,9 +15,9 @@ public class BlackjackGameFacade {
 		return new BlackjackGame();
 	}
 
-	public void performPlayerAction(BlackjackGame game, String action) {
+	public void performPlayerAction(BlackjackGame game, String action, int handIndex) {
 		if ("hit".equals(action)) {
-			game.playerHit();
+			game.playerHit(handIndex);
 		} else if ("stand".equals(action)) {
 			game.playerStand();
 			boolean shouldDealerStand = false;
@@ -46,10 +46,10 @@ public class BlackjackGameFacade {
 		return game;
 	}
 
-	public void handlePostRequest(HttpSession session, String action) {
+	public void handlePostRequest(HttpSession session, String action, int handIndex) {
 		BlackjackGame game = getOrCreateGame(session);
 		if (action != null) {
-			performPlayerAction(game, action);
+			performPlayerAction(game, action, handIndex);
 		}
 	}
 
