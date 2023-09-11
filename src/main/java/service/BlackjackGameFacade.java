@@ -16,8 +16,10 @@ public class BlackjackGameFacade {
 	}
 
 	public void performPlayerAction(BlackjackGame game, String action, int handIndex) {
+		game.getPlayer().setCurrentHandIndex(handIndex);
 		if ("hit".equals(action)) {
-			game.playerHit(handIndex);
+			Card cardToHit = game.drawCard(); 
+			game.playerHit(cardToHit, handIndex);
 		} else if ("stand".equals(action)) {
 			game.playerStand();
 			boolean shouldDealerStand = false;
@@ -34,6 +36,7 @@ public class BlackjackGameFacade {
 			}
 		} else if ("split".equals(action)) {
 			performSplit(game);
+			handIndex += 1;
 		}
 	}
 
