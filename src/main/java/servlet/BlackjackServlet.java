@@ -31,7 +31,16 @@ public class BlackjackServlet extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		String action = request.getParameter("action");
-		facade.handlePostRequest(session, action);
+		String handIndexStr = request.getParameter("handIndex");
+		int handIndex = 0;
+	    if (handIndexStr != null && !handIndexStr.isEmpty()) {
+	        try {
+	            handIndex = Integer.parseInt(handIndexStr);
+	        } catch (NumberFormatException e) {
+	        	e.printStackTrace();
+	        }
+	    }
+		facade.handlePostRequest(session, action, handIndex);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/blackjack.jsp");
 		dispatcher.forward(request, response);
 
