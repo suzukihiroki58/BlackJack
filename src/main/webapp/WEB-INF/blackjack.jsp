@@ -59,10 +59,13 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 				</div>
 				<%
 				List<List<Card>> playerHands = game.getPlayer().getHands();
+				int handIndex = 0;
 				for (List<Card> hand : playerHands) {
 				%>
 				<div class="player-hand">
-					<h2 class="large-white-text">プレイヤーの手札</h2>
+					<h2 class="large-white-text">
+						プレイヤーの手札（<%=handIndex + 1%>）
+					</h2>
 					<%
 					for (Card card : hand) {
 					%>
@@ -71,37 +74,37 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 					<%
 					}
 					%>
+					<%
+					if (!game.isGameOver()) {
+					%>
+					<form action="BlackjackServlet" method="post">
+						<button type="submit" name="action" value="hit"
+							class="game-button">ヒット</button>
+						<button type="submit" name="action" value="stand"
+							class="game-button">スタンド</button>
+						<%
+						if (canSplit) {
+						%>
+						<button type="submit" name="action" value="split"
+							class="game-button">スプリット</button>
+						<%
+						}
+						%>
+					</form>
+					<%
+					} else {
+					%>
+					<span class="large-white-text"><%=gameFacade.checkWinner(game, loginUser)%></span>
+					<br> <br> <a href="BlackjackServlet"
+						class="large-white-text-replay">再プレイ</a>
+					<%
+					}
+					%>
 				</div>
 				<%
 				}
 				%>
 			</div>
-
-			<%
-			if (!game.isGameOver()) {
-			%>
-			<form action="BlackjackServlet" method="post">
-				<button type="submit" name="action" value="hit" class="game-button">ヒット</button>
-				<button type="submit" name="action" value="stand"
-					class="game-button">スタンド</button>
-				<%
-				if (canSplit) {
-				%>
-				<button type="submit" name="action" value="split"
-					class="game-button">スプリット</button>
-				<%
-				}
-				%>
-			</form>
-			<%
-			} else {
-			%>
-			<span class="large-white-text"><%=gameFacade.checkWinner(game, loginUser)%></span>
-			<br> <br> <a href="BlackjackServlet"
-				class="large-white-text-replay">再プレイ</a>
-			<%
-			}
-			%>
 		</div>
 	</div>
 	</div>

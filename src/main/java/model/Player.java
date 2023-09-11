@@ -61,4 +61,11 @@ public class Player {
 	    newHand.add(hands.get(0).remove(1));
 	    hands.add(newHand);
 	}
+	
+	public void playerHit(Card card, int handIndex) {
+		 receiveCard(card, handIndex);
+	}
+
+	public void playerStand(int handIndex) {
+	}
 }
