@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Player {
 	private final List<List<Card>> hands;
+	private int currentHandIndex = 0; 
 
 	public Player() {
 		hands = new ArrayList<>();
@@ -37,9 +38,6 @@ public class Player {
 			total -= 10;
 			aces--;
 		}
-		//デバッグ
-		System.out.println("getHandTotal: " + total);
-
 		return total;
 	}
 
@@ -62,10 +60,11 @@ public class Player {
 	    hands.add(newHand);
 	}
 	
-	public void playerHit(Card card, int handIndex) {
-		 receiveCard(card, handIndex);
-	}
-
-	public void playerStand(int handIndex) {
-	}
+	public void setCurrentHandIndex(int index) {
+        this.currentHandIndex = index;
+    }
+	
+	public int getCurrentHandIndex() {
+        return this.currentHandIndex;
+    }
 }
