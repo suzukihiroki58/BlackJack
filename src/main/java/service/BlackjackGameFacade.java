@@ -21,7 +21,7 @@ public class BlackjackGameFacade {
 			Card cardToHit = game.drawCard(); 
 			game.playerHit(cardToHit, handIndex);
 		} else if ("stand".equals(action)) {
-			game.playerStand();
+			game.playerStand(handIndex);
 			boolean shouldDealerStand = false;
 			if (game.getDealer().getHand(0).size() == 2 && game.getDealer().getHandTotal(0) >= 17) {
 				shouldDealerStand = true;
@@ -36,7 +36,6 @@ public class BlackjackGameFacade {
 			}
 		} else if ("split".equals(action)) {
 			performSplit(game);
-			handIndex += 1;
 		}
 	}
 
@@ -56,9 +55,9 @@ public class BlackjackGameFacade {
 		}
 	}
 
-	public String checkWinner(BlackjackGame game, UserCredential loginUser) {
-		int playerTotal = game.getPlayer().getHandTotal(0);
-		int dealerTotal = game.getDealer().getHandTotal(0);
+	public String checkWinner(BlackjackGame game, UserCredential loginUser, int handIndex) {
+		int playerTotal = game.getPlayer().getHandTotal(handIndex);
+		int dealerTotal = game.getDealer().getHandTotal(handIndex);
 
 		boolean win = false;
 		boolean lose = false;
@@ -86,11 +85,11 @@ public class BlackjackGameFacade {
 			resultMessage = "引き分け";
 		}
 
-		return updateGameRecordsAndReturnMessage(loginUser, win, lose, draw, resultMessage, playerTotal, dealerTotal);
+		return updateGameRecordsAndReturnMessage(loginUser, win, lose, draw, resultMessage, playerTotal, dealerTotal, handIndex);
 	}
 
 	public String updateGameRecordsAndReturnMessage(UserCredential loginUser, boolean win, boolean lose, boolean draw,
-			String resultMessage, int playerTotal, int dealerTotal) {
+			String resultMessage, int playerTotal, int dealerTotal, int handIndex) {
 		try {
 			GameRecordsDAO dao = new GameRecordsDAO();
 			GameRecord gameRecord = new GameRecord(String.valueOf(loginUser.getUserId()), win ? 1 : 0, lose ? 1 : 0,
