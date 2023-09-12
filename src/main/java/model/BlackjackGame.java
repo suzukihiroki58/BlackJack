@@ -1,13 +1,16 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BlackjackGame {
 	private final Deck deck;
 	private final Player player;
 	private final Player dealer;
-	private boolean playerStand = false;
+	private List<Boolean> playerStandList; 
 
 	public boolean isGameOver() {
-		if (playerStand) {
+		if (playerStandList.get(0)) {
 			return true;
 		} else if (getPlayer().getHandTotal(0) > 21) {
 			return true;
@@ -22,6 +25,8 @@ public class BlackjackGame {
 		player = new Player();
 		dealer = new Player();
 		dealInitialCards();
+		playerStandList = new ArrayList<>();
+	    playerStandList.add(false);
 	}
 
 	public void dealInitialCards() {
@@ -48,7 +53,7 @@ public class BlackjackGame {
 	}
 
 	public void playerStand() {
-		this.playerStand = true;
+		this.playerStandList.set(0, true);
 	}
 
 }
