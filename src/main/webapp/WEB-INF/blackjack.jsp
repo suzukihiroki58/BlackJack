@@ -78,6 +78,7 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 					if (!game.isGameOver()) {
 					%>
 					<form action="BlackjackServlet" method="post">
+						<input type="hidden" name="handIndex" value="<%=handIndex%>">
 						<button type="submit" name="action" value="hit"
 							class="game-button">ヒット</button>
 						<button type="submit" name="action" value="stand"
@@ -92,6 +93,7 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 						%>
 					</form>
 					<%
+					handIndex += 1;
 					} else {
 					%>
 					<span class="large-white-text"><%=gameFacade.checkWinner(game, loginUser)%></span>
