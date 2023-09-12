@@ -96,7 +96,7 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 					handIndex += 1;
 					} else {
 					%>
-					<span class="large-white-text"><%=gameFacade.checkWinner(game, loginUser)%></span>
+					<span class="large-white-text"><%=gameFacade.checkWinner(game, loginUser, handIndex)%></span>
 					<br> <br> <a href="BlackjackServlet"
 						class="large-white-text-replay">再プレイ</a>
 					<%
