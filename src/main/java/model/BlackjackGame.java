@@ -9,19 +9,15 @@ public class BlackjackGame {
 	private final Player dealer;
 	private List<Boolean> playerStandList; 
 
-	public boolean isGameOver() {
-	    for (int i = 0; i < player.getHands().size(); i++) {
-	        if (playerStandList.get(i)) {
-	            continue;
-	        }
-	        if (getPlayer().getHandTotal(i) > 21) {
-	            return true;
-	        }
-	    }
-	    if (getDealer().getHandTotal(0) > 21) {
-	        return true;
-	    }
-	    return false;
+	public boolean isGameOver(int handIndex) {
+		if (playerStandList.get(0)) {
+			return true;
+		} else if (getPlayer().getHandTotal(handIndex) > 21) {
+			return true;
+		} else if (getDealer().getHandTotal(0) > 21) {
+			return true;
+		}
+		return false;
 	}
 
 
@@ -59,7 +55,10 @@ public class BlackjackGame {
 	}
 
 	public void playerStand(int handIndex) {
-		this.playerStandList.set(handIndex, true);
+		while (playerStandList.size() <= handIndex) {
+		    playerStandList.add(false);
+		}
+		playerStandList.set(handIndex, true);
 	}
 
 }

@@ -57,7 +57,7 @@ public class BlackjackGameFacade {
 
 	public String checkWinner(BlackjackGame game, UserCredential loginUser, int handIndex) {
 		int playerTotal = game.getPlayer().getHandTotal(handIndex);
-		int dealerTotal = game.getDealer().getHandTotal(handIndex);
+		int dealerTotal = game.getDealer().getHandTotal(0);
 
 		boolean win = false;
 		boolean lose = false;
