@@ -21,7 +21,7 @@ public class BlackjackGameFacade {
 			Card cardToHit = game.drawCard(); 
 			game.playerHit(cardToHit, handIndex);
 		} else if ("stand".equals(action)) {
-			game.playerStand();
+			game.playerStand(handIndex);
 			boolean shouldDealerStand = false;
 			if (game.getDealer().getHand(0).size() == 2 && game.getDealer().getHandTotal(0) >= 17) {
 				shouldDealerStand = true;
@@ -56,8 +56,8 @@ public class BlackjackGameFacade {
 		}
 	}
 
-	public String checkWinner(BlackjackGame game, UserCredential loginUser) {
-		int playerTotal = game.getPlayer().getHandTotal(0);
+	public String checkWinner(BlackjackGame game, UserCredential loginUser, int handIndex) {
+		int playerTotal = game.getPlayer().getHandTotal(handIndex);
 		int dealerTotal = game.getDealer().getHandTotal(0);
 
 		boolean win = false;

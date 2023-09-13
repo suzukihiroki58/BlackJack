@@ -33,7 +33,9 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 	<div class="main-wrapper">
 		<div class="container">
 			<div class="game-board">
+			
 				<div class="dealer-hand" id="dealer-hand">
+				<% int handIndex = 0; %>
 					<h2 class="large-white-text">ディーラーの手札</h2>
 					<%
 					List<Card> dealerHand = game.getDealer().getHand(0);
@@ -42,7 +44,7 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 					for (int i = 0; i < dealerHand.size(); i++) {
 					%>
 					<%
-					if (i == 1 && !game.isGameOver()) {
+					if (i == 1 && !game.isGameOver(handIndex)) {
 					%>
 					<img src="images/card_back.png" alt="カードの背面" />
 					<%
@@ -59,7 +61,6 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 				</div>
 				<%
 				List<List<Card>> playerHands = game.getPlayer().getHands();
-				int handIndex = 0;
 				for (List<Card> hand : playerHands) {
 				%>
 				<div class="player-hand">
@@ -75,7 +76,7 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 					}
 					%>
 					<%
-					if (!game.isGameOver()) {
+					if (!game.isGameOver(handIndex)) {
 					%>
 					<form action="BlackjackServlet" method="post">
 						<input type="hidden" name="handIndex" value="<%=handIndex%>">
@@ -96,7 +97,7 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 					handIndex += 1;
 					} else {
 					%>
-					<span class="large-white-text"><%=gameFacade.checkWinner(game, loginUser)%></span>
+					<span class="large-white-text"><%=gameFacade.checkWinner(game, loginUser, handIndex)%></span>
 					<br> <br> <a href="BlackjackServlet"
 						class="large-white-text-replay">再プレイ</a>
 					<%
