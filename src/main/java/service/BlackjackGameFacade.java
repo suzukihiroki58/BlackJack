@@ -1,5 +1,6 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -18,25 +19,23 @@ public class BlackjackGameFacade {
 	public void performPlayerAction(BlackjackGame game, String action, int handIndex) {
 		game.getPlayer().setCurrentHandIndex(handIndex);
 		if ("hit".equals(action)) {
-			Card cardToHit = game.drawCard(); 
+			Card cardToHit = game.drawCard();
 			game.playerHit(cardToHit, handIndex);
 		} else if ("stand".equals(action)) {
 			game.playerStand(handIndex);
-			boolean shouldDealerStand = false;
-			if (game.getDealer().getHand(0).size() == 2 && game.getDealer().getHandTotal(0) >= 17) {
-				shouldDealerStand = true;
-			}
-			if (!shouldDealerStand) {
-				while (game.getDealer().getHandTotal(0) < 17) {
-					if (game.getDealer().getHandTotal(0) > 21) {
-						break;
-					}
-					game.getDealer().receiveCard(game.drawCard(), 0);
-				}
-			}
 		} else if ("split".equals(action)) {
 			performSplit(game);
 			handIndex += 1;
+			game.addNewHandForSplit();
+		}
+
+		if (game.isGameOver(handIndex)) {
+			while (game.getDealer().getHandTotal(0) < 17) {
+				if (game.getDealer().getHandTotal(0) > 21) {
+					break;
+				}
+				game.getDealer().receiveCard(game.drawCard(), 0);
+			}
 		}
 	}
 
@@ -56,10 +55,19 @@ public class BlackjackGameFacade {
 		}
 	}
 
-	public String checkWinner(BlackjackGame game, UserCredential loginUser, int handIndex) {
-		int playerTotal = game.getPlayer().getHandTotal(handIndex);
+	public List<String> checkWinners(BlackjackGame game, UserCredential loginUser) {
+		List<String> resultMessages = new ArrayList<>();
 		int dealerTotal = game.getDealer().getHandTotal(0);
 
+		for (int handIndex = 0; handIndex < game.getPlayer().getHands().size(); handIndex++) {
+			int playerTotal = game.getPlayer().getHandTotal(handIndex);
+			String resultMessage = calculateResultMessage(playerTotal, dealerTotal);
+			resultMessages.add(resultMessage);
+		}
+		return resultMessages;
+	}
+
+	private String calculateResultMessage(int playerTotal, int dealerTotal) {
 		boolean win = false;
 		boolean lose = false;
 		boolean draw = false;
@@ -86,7 +94,7 @@ public class BlackjackGameFacade {
 			resultMessage = "引き分け";
 		}
 
-		return updateGameRecordsAndReturnMessage(loginUser, win, lose, draw, resultMessage, playerTotal, dealerTotal);
+		return resultMessage;
 	}
 
 	public String updateGameRecordsAndReturnMessage(UserCredential loginUser, boolean win, boolean lose, boolean draw,
@@ -123,7 +131,7 @@ public class BlackjackGameFacade {
 
 	public void performSplit(BlackjackGame game) {
 		game.getPlayer().splitHand();
-		game.getPlayer().receiveCard(game.drawCard(), 0); 
-	    game.getPlayer().receiveCard(game.drawCard(), 1);
+		game.getPlayer().receiveCard(game.drawCard(), 0);
+		game.getPlayer().receiveCard(game.drawCard(), 1);
 	}
 }

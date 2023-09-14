@@ -5,7 +5,8 @@ import java.util.List;
 
 public class Player {
 	private final List<List<Card>> hands;
-	private int currentHandIndex = 0; 
+	private int currentHandIndex = 0;
+	private boolean hasSplit = false;
 
 	public Player() {
 		hands = new ArrayList<>();
@@ -19,9 +20,9 @@ public class Player {
 	public List<Card> getHand(int handIndex) {
 		return hands.get(handIndex);
 	}
-	
+
 	public List<List<Card>> getHands() {
-	    return hands;
+		return hands;
 	}
 
 	public int getHandTotal(int handIndex) {
@@ -49,22 +50,26 @@ public class Player {
 		}
 		return builder.substring(0, builder.length() - 1);
 	}
-	
-	public void splitHand() {
-	    if (hands.get(0).size() != 2) {
-	        return;
-	    }
 
-	    List<Card> newHand = new ArrayList<>();
-	    newHand.add(hands.get(0).remove(1));
-	    hands.add(newHand);
+	public void splitHand() {
+		if (hands.get(0).size() != 2) {
+			return;
+		}
+		List<Card> newHand = new ArrayList<>();
+		newHand.add(hands.get(0).remove(1));
+		hands.add(newHand);
+		hasSplit = true;
 	}
-	
+
 	public void setCurrentHandIndex(int index) {
-        this.currentHandIndex = index;
-    }
-	
+		this.currentHandIndex = index;
+	}
+
 	public int getCurrentHandIndex() {
-        return this.currentHandIndex;
-    }
+		return this.currentHandIndex;
+	}
+
+	public boolean hasSplit() {
+		return hasSplit;
+	}
 }

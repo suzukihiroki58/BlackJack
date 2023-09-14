@@ -7,10 +7,18 @@ public class BlackjackGame {
 	private final Deck deck;
 	private final Player player;
 	private final Player dealer;
-	private List<Boolean> playerStandList; 
+	private List<Boolean> playerStandList;
 
 	public boolean isGameOver(int handIndex) {
-		if (playerStandList.get(0)) {
+		boolean allHandsStandOrBurst = true;
+		for (int i = 0; i < playerStandList.size(); i++) {
+			if (!playerStandList.get(i) && getPlayer().getHandTotal(i) <= 21) {
+				allHandsStandOrBurst = false;
+				break;
+			}
+		}
+
+		if (allHandsStandOrBurst) {
 			return true;
 		} else if (getPlayer().getHandTotal(handIndex) > 21) {
 			return true;
@@ -26,7 +34,7 @@ public class BlackjackGame {
 		dealer = new Player();
 		dealInitialCards();
 		playerStandList = new ArrayList<>();
-	    playerStandList.add(false);
+		playerStandList.add(false);
 	}
 
 	public void dealInitialCards() {
@@ -54,9 +62,13 @@ public class BlackjackGame {
 
 	public void playerStand(int handIndex) {
 		while (playerStandList.size() <= handIndex) {
-		    playerStandList.add(false);
+			playerStandList.add(false);
 		}
 		playerStandList.set(handIndex, true);
+	}
+
+	public void addNewHandForSplit() {
+		playerStandList.add(false);
 	}
 
 }
