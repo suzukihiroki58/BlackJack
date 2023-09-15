@@ -17,6 +17,10 @@ public class BlackjackGameFacade {
 	}
 
 	public void performPlayerAction(BlackjackGame game, String action, int handIndex) {
+		if ("hit".equals(action) && game.getPlayer().getHandTotal(handIndex) >= 21) {
+			return;
+		}
+		
 		game.getPlayer().setCurrentHandIndex(handIndex);
 		if ("hit".equals(action)) {
 			Card cardToHit = game.drawCard();
@@ -74,10 +78,7 @@ public class BlackjackGameFacade {
 
 		String resultMessage = "";
 
-		if (playerTotal > 21 && dealerTotal > 21) {
-			draw = true;
-			resultMessage = "両者バーストにより、引き分け";
-		} else if (playerTotal > 21) {
+		if (playerTotal > 21) {
 			lose = true;
 			resultMessage = "プレイヤーのバーストにより、ディーラーの勝利";
 		} else if (dealerTotal > 21) {
