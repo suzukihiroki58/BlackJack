@@ -20,12 +20,9 @@ public class BlackjackGame {
 
 		if (allHandsStandOrBurst) {
 			return true;
-		} else if (getPlayer().getHandTotal(handIndex) > 21) {
-			return true;
-		} else if (getDealer().getHandTotal(0) > 21) {
-			return true;
+		} else {
+			return false;
 		}
-		return false;
 	}
 
 
