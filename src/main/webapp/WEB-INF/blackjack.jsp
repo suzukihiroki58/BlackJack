@@ -8,7 +8,7 @@
 BlackjackGameFacade gameFacade = new BlackjackGameFacade();
 UserCredential loginUser = gameFacade.getOrCreateLoginUser(session);
 BlackjackGame game = gameFacade.getOrCreateGame(session);
-boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
+boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getPlayer().getHand(0));
 %>
 
 <!DOCTYPE html>
@@ -33,9 +33,10 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 	<div class="main-wrapper">
 		<div class="container">
 			<div class="game-board">
-			
 				<div class="dealer-hand" id="dealer-hand">
-				<% int handIndex = 0; %>
+					<%
+					int handIndex = 0;
+					%>
 					<h2 class="large-white-text">ディーラーの手札</h2>
 					<%
 					List<Card> dealerHand = game.getDealer().getHand(0);
@@ -59,14 +60,15 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 					}
 					%>
 				</div>
+
 				<%
 				List<List<Card>> playerHands = game.getPlayer().getHands();
-				for (List<Card> hand : playerHands) {
+				int totalHands = playerHands.size();
+				for (int currentHandIndex = 0; currentHandIndex < totalHands; currentHandIndex++) {
+					List<Card> hand = playerHands.get(currentHandIndex);
 				%>
 				<div class="player-hand">
-					<h2 class="large-white-text">
-						プレイヤーの手札（<%=handIndex + 1%>）
-					</h2>
+					<h2 class="large-white-text">プレイヤーの手札</h2>
 					<%
 					for (Card card : hand) {
 					%>
@@ -76,7 +78,7 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 					}
 					%>
 					<%
-					if (!game.isGameOver(handIndex)) {
+					if (!game.isGameOver(currentHandIndex)) {
 					%>
 					<form action="BlackjackServlet" method="post">
 						<input type="hidden" name="handIndex" value="<%=handIndex%>">
@@ -96,11 +98,24 @@ boolean canSplit = gameFacade.canSplit(game.getPlayer().getHand(0));
 					<%
 					handIndex += 1;
 					} else {
+					if (currentHandIndex == totalHands - 1) {
 					%>
-					<span class="large-white-text"><%=gameFacade.checkWinner(game, loginUser, handIndex)%></span>
-					<br> <br> <a href="BlackjackServlet"
-						class="large-white-text-replay">再プレイ</a>
+					<span class="large-white-text"> 
 					<%
+					 List<String> resultMessages = gameFacade.checkWinners(game, loginUser);
+					 for (int i = 0; i < resultMessages.size(); i++) {
+				 	%>
+						<div>
+							<%=i + 1%>つ目の手札の結果:
+							<%=resultMessages.get(i)%>
+						</div> 
+						<%
+						 }
+						 %>
+					</span> 
+						<br><br><a href="BlackjackServlet"class="large-white-text-replay">再プレイ</a>
+					<%
+					}
 					}
 					%>
 				</div>
