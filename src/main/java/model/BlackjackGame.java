@@ -18,11 +18,7 @@ public class BlackjackGame {
 			}
 		}
 
-		if (allHandsStandOrBurst) {
-			return true;
-		} else {
-			return false;
-		}
+		return allHandsStandOrBurst;
 	}
 
 

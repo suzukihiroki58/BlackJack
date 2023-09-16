@@ -52,13 +52,13 @@ public class Player {
 	}
 
 	public void splitHand() {
-		if (hands.get(0).size() != 2) {
-			return;
-		}
-		List<Card> newHand = new ArrayList<>();
-		newHand.add(hands.get(0).remove(1));
-		hands.add(newHand);
-		hasSplit = true;
+	    if (hands.get(0).size() != 2) {
+	        return;
+	    }
+	    List<Card> newHand = new ArrayList<>();
+	    newHand.add(hands.get(0).remove(1));
+	    hands.add(newHand);
+	    hasSplit = true;
 	}
 
 	public void setCurrentHandIndex(int index) {
