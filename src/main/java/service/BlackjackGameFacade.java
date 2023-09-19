@@ -43,17 +43,21 @@ public class BlackjackGameFacade {
 		}
 	}
 
-	public BlackjackGame getOrCreateGame(HttpSession session) {
+	public BlackjackGame getOrCreateGame(HttpSession session, UserCredential loginUser) {
 		BlackjackGame game = (BlackjackGame) session.getAttribute("game");
 		if (game == null) {
 			game = initializeGame();
+			GameRecordsDAO gameRecordsDAO = new GameRecordsDAO();
+	        int chips = gameRecordsDAO.getPlayerChips(loginUser.getUserId());
+	        game.getPlayer().addChips(chips - game.getPlayer().getChips());
 			session.setAttribute("game", game);
 		}
 		return game;
 	}
 
 	public void handlePostRequest(HttpSession session, String action, int handIndex) {
-		BlackjackGame game = getOrCreateGame(session);
+		UserCredential loginUser = getOrCreateLoginUser(session);
+		BlackjackGame game = getOrCreateGame(session, loginUser);
 		if (action != null) {
 			performPlayerAction(game, action, handIndex);
 		}
@@ -69,6 +73,10 @@ public class BlackjackGameFacade {
 			game.updateChipsBasedOnOutcome(resultMessage);
 			resultMessages.add(resultMessage);
 		}
+		
+		GameRecordsDAO gameRecordsDAO = new GameRecordsDAO();
+	    gameRecordsDAO.updatePlayerChips(loginUser.getUserId(), game.getPlayer().getChips());
+	    
 		return resultMessages;
 	}
 

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.BlackjackGame;
+import model.UserCredential;
 import service.BlackjackGameFacade;
 
 @WebServlet("/BlackjackServlet")
@@ -30,6 +31,7 @@ public class BlackjackServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		UserCredential loginUser = facade.getOrCreateLoginUser(session);
 		String action = request.getParameter("action");
 		String handIndexStr = request.getParameter("handIndex");
 		int handIndex = 0;
@@ -44,7 +46,7 @@ public class BlackjackServlet extends HttpServlet {
 		if ("bet".equals(action) && betAmountStr != null && !betAmountStr.isEmpty()) {
 			try {
 				int betAmount = Integer.parseInt(betAmountStr);
-				BlackjackGame game = facade.getOrCreateGame(session);
+				BlackjackGame game = facade.getOrCreateGame(session, loginUser);
 				game.setBetAmount(betAmount);
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
