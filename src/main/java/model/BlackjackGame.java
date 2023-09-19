@@ -10,6 +10,7 @@ public class BlackjackGame {
 	private List<Boolean> playerStandList;
 	private int betAmount;
 	private int initialChips;
+	private List<Integer> betAmountList = new ArrayList<>();
 
 	public boolean isGameOver(int handIndex) {
 		boolean allHandsStandOrBurst = true;
@@ -69,6 +70,7 @@ public class BlackjackGame {
 		this.betAmount = betAmount;
 		this.initialChips = player.getChips();
 		player.removeChips(betAmount);
+		betAmountList.add(betAmount); 
 	}
 
 	public int getBetAmount() {
@@ -86,5 +88,16 @@ public class BlackjackGame {
 	public int calculateChipDifference() {
 		return player.getChips() - initialChips;
 	}
+	
+	public void addNewBetForSplit() {
+	    int originalBet = betAmountList.get(0);
+	    player.removeChips(originalBet);
+	    betAmountList.add(originalBet);  
+	}
+	
+	public List<Integer> getBetAmountList() {
+	    return betAmountList;
+	}
+
 
 }

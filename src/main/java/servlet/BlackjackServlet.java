@@ -33,23 +33,23 @@ public class BlackjackServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		String handIndexStr = request.getParameter("handIndex");
 		int handIndex = 0;
-	    if (handIndexStr != null && !handIndexStr.isEmpty()) {
-	        try {
-	            handIndex = Integer.parseInt(handIndexStr);
-	        } catch (NumberFormatException e) {
-	        	e.printStackTrace();
-	        }
-	    }
-	    String betAmountStr = request.getParameter("betAmount");
-	    if ("bet".equals(action) && betAmountStr != null && !betAmountStr.isEmpty()) {
-	        try {
-	            int betAmount = Integer.parseInt(betAmountStr);
-	            BlackjackGame game = facade.getOrCreateGame(session);
-	            game.setBetAmount(betAmount);
-	        } catch (NumberFormatException e) {
-	        	e.printStackTrace();
-	        }
-	    }
+		if (handIndexStr != null && !handIndexStr.isEmpty()) {
+			try {
+				handIndex = Integer.parseInt(handIndexStr);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		String betAmountStr = request.getParameter("betAmount");
+		if ("bet".equals(action) && betAmountStr != null && !betAmountStr.isEmpty()) {
+			try {
+				int betAmount = Integer.parseInt(betAmountStr);
+				BlackjackGame game = facade.getOrCreateGame(session);
+				game.setBetAmount(betAmount);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
 		facade.handlePostRequest(session, action, handIndex);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/blackjack.jsp");
 		dispatcher.forward(request, response);

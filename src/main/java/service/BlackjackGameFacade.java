@@ -132,6 +132,7 @@ public class BlackjackGameFacade {
 
 	public void performSplit(BlackjackGame game) {
 		game.getPlayer().splitHand();
+		game.addNewBetForSplit(); 
 		game.getPlayer().receiveCard(game.drawCard(), 0);
 		game.getPlayer().receiveCard(game.drawCard(), 1);
 	}

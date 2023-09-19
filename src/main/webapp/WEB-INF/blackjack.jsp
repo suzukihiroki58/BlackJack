@@ -67,7 +67,14 @@ boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getP
 					}
 					%>
 				</div>
-				<h3 class="large-white-text">賭けたチップ：<%= game.getBetAmount() %></h3>
+				<%
+				List<Integer> betAmounts = game.getBetAmountList();
+				for (int i = 0; i < betAmounts.size(); i++) {
+				%>
+				    <h3 class="large-white-text"><%= i + 1 %>つ目の手札で賭けたチップ：<%= betAmounts.get(i) %></h3>
+				<%
+				}
+				%>
 				<h3 class="large-white-text">保有チップ：<%= game.getPlayer().getChips() %></h3>
 				<%
 				List<List<Card>> playerHands = game.getPlayer().getHands();
@@ -122,7 +129,7 @@ boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getP
 						 %>
 					</span> 
 						<h3 class="large-white-text">チップの増減：<%= game.calculateChipDifference() %></h3>
-						<br><br><a href="BlackjackServlet"class="large-white-text-replay">再プレイ</a>
+						<h3><a href="BlackjackServlet" class="large-white-text-replay">再プレイ</a></h3>
 					<%
 					}
 					}
