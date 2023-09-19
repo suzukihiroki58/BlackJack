@@ -20,7 +20,7 @@ public class BlackjackGameFacade {
 		if ("hit".equals(action) && game.getPlayer().getHandTotal(handIndex) >= 21) {
 			return;
 		}
-		
+
 		game.getPlayer().setCurrentHandIndex(handIndex);
 		if ("hit".equals(action)) {
 			Card cardToHit = game.drawCard();
@@ -66,6 +66,7 @@ public class BlackjackGameFacade {
 		for (int handIndex = 0; handIndex < game.getPlayer().getHands().size(); handIndex++) {
 			int playerTotal = game.getPlayer().getHandTotal(handIndex);
 			String resultMessage = calculateResultMessage(playerTotal, dealerTotal);
+			game.updateChipsBasedOnOutcome(resultMessage);
 			resultMessages.add(resultMessage);
 		}
 		return resultMessages;

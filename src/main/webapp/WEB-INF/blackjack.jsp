@@ -26,13 +26,20 @@ boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getP
 		</p>
 		<a href="MenuServlet" class="header-link-right">メニューへ戻る</a>
 	</div>
-	<div class="dealer">
+	<!--  <div class="dealer">
 		<img src="images/dealer.png" alt="Dealer" class="dealer-character">
-	</div>
+	</div> --> 
 
 	<div class="main-wrapper">
 		<div class="container">
 			<div class="game-board">
+			<% if (game.getBetAmount() == 0) { %>
+    <form action="BlackjackServlet" method="post">
+        <label for="betAmount">賭けるチップ: </label>
+        <input type="number" id="betAmount" name="betAmount" min="1" max="<%= game.getPlayer().getChips() %>">
+        <button type="submit" name="action" value="bet">賭ける</button>
+    </form>
+<% } else { %>
 				<div class="dealer-hand" id="dealer-hand">
 					<%
 					int handIndex = 0;
@@ -60,7 +67,8 @@ boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getP
 					}
 					%>
 				</div>
-
+				<h3 class="large-white-text">賭けたチップ：<%= game.getBetAmount() %></h3>
+				<h3 class="large-white-text">保有チップ：<%= game.getPlayer().getChips() %></h3>
 				<%
 				List<List<Card>> playerHands = game.getPlayer().getHands();
 				int totalHands = playerHands.size();
@@ -113,6 +121,7 @@ boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getP
 						 }
 						 %>
 					</span> 
+						<h3 class="large-white-text">チップの増減：<%= game.calculateChipDifference() %></h3>
 						<br><br><a href="BlackjackServlet"class="large-white-text-replay">再プレイ</a>
 					<%
 					}
@@ -122,6 +131,7 @@ boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getP
 				<%
 				}
 				%>
+				<% } %>
 			</div>
 		</div>
 	</div>

@@ -7,10 +7,12 @@ public class Player {
 	private final List<List<Card>> hands;
 	private int currentHandIndex = 0;
 	private boolean hasSplit = false;
+	private int chips;
 
 	public Player() {
 		hands = new ArrayList<>();
 		hands.add(new ArrayList<>());
+		this.chips = 100;
 	}
 
 	public void receiveCard(Card card, int handIndex) {
@@ -52,13 +54,13 @@ public class Player {
 	}
 
 	public void splitHand() {
-	    if (hands.get(0).size() != 2) {
-	        return;
-	    }
-	    List<Card> newHand = new ArrayList<>();
-	    newHand.add(hands.get(0).remove(1));
-	    hands.add(newHand);
-	    hasSplit = true;
+		if (hands.get(0).size() != 2) {
+			return;
+		}
+		List<Card> newHand = new ArrayList<>();
+		newHand.add(hands.get(0).remove(1));
+		hands.add(newHand);
+		hasSplit = true;
 	}
 
 	public void setCurrentHandIndex(int index) {
@@ -72,4 +74,17 @@ public class Player {
 	public boolean hasSplit() {
 		return hasSplit;
 	}
+
+	public int getChips() {
+		return chips;
+	}
+
+	public void addChips(int amount) {
+		this.chips += amount;
+	}
+
+	public void removeChips(int amount) {
+		this.chips -= amount;
+	}
+
 }

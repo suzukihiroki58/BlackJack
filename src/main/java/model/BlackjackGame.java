@@ -8,6 +8,8 @@ public class BlackjackGame {
 	private final Player player;
 	private final Player dealer;
 	private List<Boolean> playerStandList;
+	private int betAmount;
+	private int initialChips;
 
 	public boolean isGameOver(int handIndex) {
 		boolean allHandsStandOrBurst = true;
@@ -17,10 +19,8 @@ public class BlackjackGame {
 				break;
 			}
 		}
-
 		return allHandsStandOrBurst;
 	}
-
 
 	public BlackjackGame() {
 		deck = new Deck();
@@ -63,6 +63,28 @@ public class BlackjackGame {
 
 	public void addNewHandForSplit() {
 		playerStandList.add(false);
+	}
+
+	public void setBetAmount(int betAmount) {
+		this.betAmount = betAmount;
+		this.initialChips = player.getChips();
+		player.removeChips(betAmount);
+	}
+
+	public int getBetAmount() {
+		return betAmount;
+	}
+
+	public void updateChipsBasedOnOutcome(String result) {
+		if (result.contains("プレイヤーの勝利")) {
+			player.addChips(betAmount * 2);
+		} else if (result.contains("引き分け")) {
+			player.addChips(betAmount);
+		}
+	}
+
+	public int calculateChipDifference() {
+		return player.getChips() - initialChips;
 	}
 
 }

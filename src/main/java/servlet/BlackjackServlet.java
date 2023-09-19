@@ -40,6 +40,16 @@ public class BlackjackServlet extends HttpServlet {
 	        	e.printStackTrace();
 	        }
 	    }
+	    String betAmountStr = request.getParameter("betAmount");
+	    if ("bet".equals(action) && betAmountStr != null && !betAmountStr.isEmpty()) {
+	        try {
+	            int betAmount = Integer.parseInt(betAmountStr);
+	            BlackjackGame game = facade.getOrCreateGame(session);
+	            game.setBetAmount(betAmount);
+	        } catch (NumberFormatException e) {
+	        	e.printStackTrace();
+	        }
+	    }
 		facade.handlePostRequest(session, action, handIndex);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/blackjack.jsp");
 		dispatcher.forward(request, response);
