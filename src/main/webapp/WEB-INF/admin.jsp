@@ -15,6 +15,11 @@ UserCredential loginUser = (UserCredential) session.getAttribute("loginUser");
 <meta charset="UTF-8">
 <title>Adminページ</title>
 <link rel="stylesheet" href="css/style.css">
+<script>
+    function confirmDelete() {
+      return confirm('本当に削除していいですか？');
+    }
+  </script>
 
 </head>
 <body class="body">
@@ -47,15 +52,13 @@ UserCredential loginUser = (UserCredential) session.getAttribute("loginUser");
 						<td><%=user.getUserName()%></td>
 						<td><%=user.getNickname()%></td>
 						<td>
-							<form action="DeleteAnyUserServlet" method="post">
+							<form action="DeleteAnyUserServlet" method="post" onsubmit="return confirmDelete();">
 								<input type="hidden" name="userId" value="<%=user.getUserId()%>" />
 								<input type="submit" value="削除" class="delete-button" />
 							</form>
 						</td>
 					</tr>
 					<%
-					p
-
 					}
 					%>
 				</tbody>

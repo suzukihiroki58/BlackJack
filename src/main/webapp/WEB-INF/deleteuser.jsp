@@ -9,6 +9,11 @@
 <meta charset="UTF-8">
 <title>ログイン中のユーザーを削除</title>
 <link rel="stylesheet" href="css/style.css">
+<script>
+  function confirmDeletion() {
+    return confirm("本当に退会していいですか？");
+  }
+</script>
 </head>
 <body class="body">
 	<div class="header">
@@ -16,7 +21,7 @@
 	</div>
 	<div class="main-wrapper">
 		<div class="container">
-			<form action="DeleteUserServlet" method="post">
+			<form action="DeleteUserServlet" method="post" onsubmit="return confirmDeletion();">
 				<input type="submit" value="退会する（退会するとユーザー情報が削除されます）"
 					class="styled-button" />
 			</form>
