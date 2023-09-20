@@ -8,7 +8,7 @@
 BlackjackGameFacade gameFacade = new BlackjackGameFacade();
 UserCredential loginUser = gameFacade.getOrCreateLoginUser(session);
 BlackjackGame game = gameFacade.getOrCreateGame(session, loginUser);
-boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getPlayer().getHand(0));
+boolean canSplit = !game.getPlayer().hasSplit() && game.canSplit(game.getPlayer().getHand(0));
 %>
 
 <!DOCTYPE html>

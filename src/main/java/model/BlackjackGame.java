@@ -106,5 +106,14 @@ public class BlackjackGame {
 	public List<Integer> getBetAmountList() {
 	    return betAmountList;
 	}
+	
+	public boolean canSplit(List<Card> hand) {
+		if (hand.size() != 2) {
+			return false;
+		}
+		Card firstCard = hand.get(0);
+		Card secondCard = hand.get(1);
+		return firstCard.getNumericValue() == secondCard.getNumericValue();
+	}
 
 }

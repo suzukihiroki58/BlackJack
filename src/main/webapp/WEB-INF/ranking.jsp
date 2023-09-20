@@ -47,7 +47,7 @@ UserCredential loginUser = (UserCredential) session.getAttribute("loginUser");
                 <tr>
                     <td><%=rank++%></td>
                     <td><%=record.getUserName()%></td>
-                    <td><%=record.getChips()%></td>  <!-- チップの所持数 -->
+                    <td><%=record.getChips()%></td>
                 </tr>
                 <%
                     }
