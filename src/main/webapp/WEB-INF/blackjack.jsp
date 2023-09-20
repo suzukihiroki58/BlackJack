@@ -34,18 +34,22 @@ boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getP
 		<div class="container">
 			<div class="game-board">
 			<% if (game.getBetAmount() == 0) { %>
-    <form action="BlackjackServlet" method="post">
-        <label for="betAmount">賭けるチップ: </label>
-        <input type="number" id="betAmount" name="betAmount" min="1" max="10">
-        <button type="submit" name="action" value="bet">賭ける</button>
-    </form>
-<% } else { %>
+			    <form action="BlackjackServlet" method="post">
+			        <label for="betAmount">賭けるチップ: </label>
+			        <input type="number" id="betAmount" name="betAmount" min="1" max="10">
+			        <button type="submit" name="action" value="bet">賭ける</button>
+			    </form>
+			<% } else { %>
 				<div class="dealer-hand" id="dealer-hand">
 					<%
 					int handIndex = 0;
 					%>
+					<% if (game.isGameOver(handIndex)) { %>
+        				<h2 class="large-white-text">ディーラーの手札（合計：<%= game.getDealer().getHandTotal(0) %>）</h2>
+    				<% } else { %>
 					<h2 class="large-white-text">ディーラーの手札</h2>
 					<%
+    				}
 					List<Card> dealerHand = game.getDealer().getHand(0);
 					%>
 					<%
@@ -66,6 +70,7 @@ boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getP
 					<%
 					}
 					%>
+					
 				</div>
 				<%
 				List<Integer> betAmounts = game.getBetAmountList();
@@ -81,9 +86,10 @@ boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getP
 				int totalHands = playerHands.size();
 				for (int currentHandIndex = 0; currentHandIndex < totalHands; currentHandIndex++) {
 					List<Card> hand = playerHands.get(currentHandIndex);
+					int handTotal = game.getPlayer().getHandTotal(currentHandIndex);
 				%>
 				<div class="player-hand">
-					<h2 class="large-white-text">プレイヤーの手札</h2>
+					<h2 class="large-white-text">プレイヤーの手札（合計：<%= handTotal %>）</h2>
 					<%
 					for (Card card : hand) {
 					%>
@@ -139,8 +145,8 @@ boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getP
 				</div>
 				<%
 				}
-				%>
-				<% } %>
+			} 
+			%>
 			</div>
 		</div>
 	</div>

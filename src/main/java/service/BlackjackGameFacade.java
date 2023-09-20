@@ -15,7 +15,7 @@ import model.UserCredential;
 
 public class BlackjackGameFacade {
 	private static final Logger logger = Logger.getLogger(BlackjackGameFacade.class.getName());
-	
+
 	public BlackjackGame initializeGame() {
 		return new BlackjackGame();
 	}
@@ -47,21 +47,20 @@ public class BlackjackGameFacade {
 
 	public BlackjackGame getOrCreateGame(HttpSession session, UserCredential loginUser) {
 		BlackjackGame game = (BlackjackGame) session.getAttribute("game");
-		
+
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        logger.log(Level.INFO, "getOrCreateGame was called. Session ID: " + session.getId());
-        for (StackTraceElement element : stackTraceElements) {
-            logger.log(Level.INFO, element.toString());
-        }
-		
+		logger.log(Level.INFO, "getOrCreateGame was called. Session ID: " + session.getId());
+		for (StackTraceElement element : stackTraceElements) {
+			logger.log(Level.INFO, element.toString());
+		}
+
 		if (game == null) {
 			game = initializeGame();
 			GameRecordsDAO gameRecordsDAO = new GameRecordsDAO();
-	        int chips = gameRecordsDAO.getPlayerChips(loginUser.getUserId());
-	        game.getPlayer().setChips(chips); 
+			int chips = gameRecordsDAO.getPlayerChips(loginUser.getUserId());
+			game.getPlayer().setChips(chips);
 			session.setAttribute("game", game);
 		}
-		System.out.println("Created or fetched game: " + game);
 		return game;
 	}
 
@@ -83,10 +82,10 @@ public class BlackjackGameFacade {
 			game.updateChipsBasedOnOutcome(resultMessage, handIndex);
 			resultMessages.add(resultMessage);
 		}
-		
+
 		GameRecordsDAO gameRecordsDAO = new GameRecordsDAO();
-	    gameRecordsDAO.updatePlayerChips(loginUser.getUserId(), game.getPlayer().getChips());
-	    
+		gameRecordsDAO.updatePlayerChips(loginUser.getUserId(), game.getPlayer().getChips());
+
 		return resultMessages;
 	}
 
@@ -150,7 +149,7 @@ public class BlackjackGameFacade {
 
 	public void performSplit(BlackjackGame game) {
 		game.getPlayer().splitHand();
-		game.addNewBetForSplit(); 
+		game.addNewBetForSplit();
 		game.getPlayer().receiveCard(game.drawCard(), 0);
 		game.getPlayer().receiveCard(game.drawCard(), 1);
 	}
