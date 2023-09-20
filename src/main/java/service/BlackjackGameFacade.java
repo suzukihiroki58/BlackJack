@@ -80,7 +80,7 @@ public class BlackjackGameFacade {
 		for (int handIndex = 0; handIndex < game.getPlayer().getHands().size(); handIndex++) {
 			int playerTotal = game.getPlayer().getHandTotal(handIndex);
 			String resultMessage = calculateResultMessage(playerTotal, dealerTotal);
-			game.updateChipsBasedOnOutcome(resultMessage);
+			game.updateChipsBasedOnOutcome(resultMessage, handIndex);
 			resultMessages.add(resultMessage);
 		}
 		

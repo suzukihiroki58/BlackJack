@@ -77,16 +77,24 @@ public class BlackjackGame {
 		return betAmount;
 	}
 
-	public void updateChipsBasedOnOutcome(String result) {
+	public void updateChipsBasedOnOutcome(String result, int handIndex) {
 		if (result.contains("プレイヤーの勝利")) {
-			player.addChips(betAmount * 2);
-		} else if (result.contains("引き分け")) {
-			player.addChips(betAmount);
-		}
+			if (player.hasBlackjack(handIndex)) {
+	            player.addChips((int) (betAmountList.get(handIndex) * 2.5));
+	        } else {
+	        	player.addChips(betAmountList.get(handIndex) * 2);
+	        }
+	    } else if (result.contains("引き分け")) {
+	        player.addChips(betAmountList.get(handIndex));
+	    }
 	}
 
-	public int calculateChipDifference() {
-		return player.getChips() - initialChips;
+	public String calculateChipDifference() {
+		int difference = player.getChips() - initialChips;
+	    if (difference > 0) {
+	        return "+" + difference;
+	    }
+	    return String.valueOf(difference);
 	}
 	
 	public void addNewBetForSplit() {
@@ -98,6 +106,5 @@ public class BlackjackGame {
 	public List<Integer> getBetAmountList() {
 	    return betAmountList;
 	}
-
 
 }

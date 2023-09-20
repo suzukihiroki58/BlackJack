@@ -90,5 +90,9 @@ public class Player {
 	public void setChips(int chips) {
 	    this.chips = chips;
 	}
+	
+	public boolean hasBlackjack(int handIndex) {
+		return getHandTotal(handIndex) == 21 && getHand(handIndex).size() == 2; 
+	}
 
 }
