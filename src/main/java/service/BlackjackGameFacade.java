@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSession;
 
 import dao.GameRecordsDAO;
 import model.BlackjackGame;
-import model.Card;
 import model.GameRecord;
 import model.UserCredential;
 
@@ -17,19 +16,23 @@ public class BlackjackGameFacade {
 		return new BlackjackGame();
 	}
 
-	public void performPlayerAction(BlackjackGame game, String action, int handIndex) {
-		if ("hit".equals(action) && game.getPlayer().getHandTotal(handIndex) >= 21) {
-			return;
-		}
+	public enum PlayerAction {
+		HIT, STAND, SPLIT
+	}
 
-		if ("hit".equals(action)) {
-			Card cardToHit = game.drawCard();
-			game.playerHit(cardToHit, handIndex);
-		} else if ("stand".equals(action)) {
+	public void performPlayerAction(BlackjackGame game, PlayerAction action, int handIndex) {
+
+		switch (action) {
+		case HIT:
+			game.playerHit(game.drawCard(), handIndex);
+			break;
+		case STAND:
 			game.playerStand(handIndex);
-		} else if ("split".equals(action)) {
+			break;
+		case SPLIT:
 			performSplit(game);
 			game.addNewHandForSplit();
+			break;
 		}
 
 		if (game.isGameOver(handIndex)) {
@@ -59,7 +62,14 @@ public class BlackjackGameFacade {
 		UserCredential loginUser = getOrCreateLoginUser(session);
 		BlackjackGame game = getOrCreateGame(session, loginUser);
 		if (action != null) {
-			performPlayerAction(game, action, handIndex);
+			PlayerAction playerAction;
+			try {
+				playerAction = PlayerAction.valueOf(action.toUpperCase());
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+				return;
+			}
+			performPlayerAction(game, playerAction, handIndex);
 		}
 	}
 
@@ -70,7 +80,8 @@ public class BlackjackGameFacade {
 		for (int handIndex = 0; handIndex < game.getPlayer().getHands().size(); handIndex++) {
 			int playerTotal = game.getPlayer().getHandTotal(handIndex);
 			String resultMessage = calculateResultMessage(playerTotal, dealerTotal);
-			game.updateChipsBasedOnOutcome(resultMessage, handIndex);
+			BlackjackGame.GameResult gameResult = translateToGameResult(resultMessage);
+			game.updateChipsBasedOnOutcome(gameResult, handIndex);
 			resultMessages.add(resultMessage);
 		}
 
@@ -78,6 +89,16 @@ public class BlackjackGameFacade {
 		gameRecordsDAO.updatePlayerChips(loginUser.getUserId(), game.getPlayer().getChips());
 
 		return resultMessages;
+	}
+
+	private BlackjackGame.GameResult translateToGameResult(String resultMessage) {
+		if (resultMessage.contains("プレイヤーの勝利")) {
+			return BlackjackGame.GameResult.PLAYER_WINS;
+		} else if (resultMessage.contains("引き分け")) {
+			return BlackjackGame.GameResult.DRAW;
+		} else {
+			return BlackjackGame.GameResult.DEALER_WINS;
+		}
 	}
 
 	private String calculateResultMessage(int playerTotal, int dealerTotal) {
