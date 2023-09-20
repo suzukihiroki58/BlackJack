@@ -8,6 +8,7 @@ public class GameRecord {
 	private int losses;
 	private int draws;
 	private float winRate;
+	private int chips;
 
 	public GameRecord() {
 	}
@@ -73,5 +74,13 @@ public class GameRecord {
 
 	public void setWinRate(float winRate) {
 		this.winRate = winRate;
+	}
+
+	public int getChips() {
+		return chips;
+	}
+
+	public void setChips(int chips) {
+		this.chips = chips;
 	}
 }

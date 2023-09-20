@@ -15,29 +15,29 @@ public class GameRecordsDAO extends BaseDAO {
 	public GameRecord calculateGameStats(GameRecord gameRecord) {
 		GameRecord stats = new GameRecord();
 
-	    int wins = gameRecord.getWins();
-	    int losses = gameRecord.getLosses();
-	    int draws = gameRecord.getDraws();
-	    int totalGames = gameRecord.getTotalGames();
-	    float winRate;
-	    if (totalGames != 0) {
-	        winRate = ((float) wins) / totalGames * 100;
-	    } else {
-	        winRate = 0;
-	    }
+		int wins = gameRecord.getWins();
+		int losses = gameRecord.getLosses();
+		int draws = gameRecord.getDraws();
+		int totalGames = gameRecord.getTotalGames();
+		float winRate;
+		if (totalGames != 0) {
+			winRate = ((float) wins) / totalGames * 100;
+		} else {
+			winRate = 0;
+		}
 
-	    stats.setTotalGames(totalGames);
-	    stats.setWins(wins);
-	    stats.setLosses(losses);
-	    stats.setDraws(draws);
-	    stats.setWinRate(winRate);
+		stats.setTotalGames(totalGames);
+		stats.setWins(wins);
+		stats.setLosses(losses);
+		stats.setDraws(draws);
+		stats.setWinRate(winRate);
 
-	    return stats;
+		return stats;
 	}
 
 	public void updateGameRecords(GameRecord gameRecord) {
 		Connection conn = null;
-		PreparedStatement upsertPs = null;
+		PreparedStatement ps = null;
 
 		try {
 			conn = getConnection();
@@ -53,19 +53,19 @@ public class GameRecordsDAO extends BaseDAO {
 					+ "draws = draws + VALUES(draws), "
 					+ "win_rate = (wins / total_games) * 100";
 
-			upsertPs = conn.prepareStatement(upsertQuery);
-			upsertPs.setString(1, gameRecord.getUserId());
-			upsertPs.setInt(2, stats.getTotalGames());
-			upsertPs.setInt(3, stats.getWins());
-			upsertPs.setInt(4, stats.getLosses());
-			upsertPs.setInt(5, stats.getDraws());
-			upsertPs.setFloat(6, stats.getWinRate());
+			ps = conn.prepareStatement(upsertQuery);
+			ps.setString(1, gameRecord.getUserId());
+			ps.setInt(2, stats.getTotalGames());
+			ps.setInt(3, stats.getWins());
+			ps.setInt(4, stats.getLosses());
+			ps.setInt(5, stats.getDraws());
+			ps.setFloat(6, stats.getWinRate());
 
-			upsertPs.executeUpdate();
+			ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			closeResources(conn, upsertPs, null);
+			closeResources(conn, ps, null);
 		}
 	}
 
@@ -138,49 +138,81 @@ public class GameRecordsDAO extends BaseDAO {
 
 		return records;
 	}
-	
-	public void updatePlayerChips(String userId, int chips) {
-	    Connection conn = null;
-	    PreparedStatement ps = null;
 
-	    try {
-	        conn = getConnection();
-	        String sql = "INSERT INTO player_chips (user_id, chips) VALUES (?, ?) ON DUPLICATE KEY UPDATE chips = ?";
-	        ps = conn.prepareStatement(sql);
-	        ps.setString(1, userId);
-	        ps.setInt(2, chips);
-	        ps.setInt(3, chips);
-	        ps.executeUpdate();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } finally {
-	        closeResources(conn, ps, null);
-	    }
+	public void updatePlayerChips(String userId, int chips) {
+		Connection conn = null;
+		PreparedStatement ps = null;
+
+		try {
+			conn = getConnection();
+			String sql = "INSERT INTO player_chips (user_id, chips) VALUES (?, ?) ON DUPLICATE KEY UPDATE chips = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, userId);
+			ps.setInt(2, chips);
+			ps.setInt(3, chips);
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeResources(conn, ps, null);
+		}
 	}
 
 	public int getPlayerChips(String userId) {
-	    int chips = 0;
-	    Connection conn = null;
-	    PreparedStatement ps = null;
-	    ResultSet rs = null;
+		int chips = 0;
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-	    try {
-	        conn = getConnection();
-	        String sql = "SELECT chips FROM player_chips WHERE user_id = ?";
-	        ps = conn.prepareStatement(sql);
-	        ps.setString(1, userId);
-	        rs = ps.executeQuery();
+		try {
+			conn = getConnection();
+			String sql = "SELECT chips FROM player_chips WHERE user_id = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, userId);
+			rs = ps.executeQuery();
 
-	        if (rs.next()) {
-	            chips = rs.getInt("chips");
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } finally {
-	        closeResources(conn, ps, rs);
-	    }
-	    return chips;
+			if (rs.next()) {
+				chips = rs.getInt("chips");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeResources(conn, ps, rs);
+		}
+		return chips;
 	}
 
+	public List<GameRecord> getAllUserChipRecords() {
+		List<GameRecord> records = new ArrayList<>();
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			conn = getConnection();
+			String sql = "SELECT p.user_id, u.USERNAME, p.chips " +
+					"FROM player_chips p " +
+					"JOIN USERS u ON p.user_id = u.USER_ID " +
+					"ORDER BY p.chips DESC";
+			ps = conn.prepareStatement(sql);
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				GameRecord record = new GameRecord();
+				record.setUserId(rs.getString("user_id"));
+				record.setUserName(rs.getString("USERNAME"));
+				record.setChips(rs.getInt("chips"));
+				records.add(record);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeResources(conn, ps, rs);
+		}
+
+		return records;
+	}
 
 }

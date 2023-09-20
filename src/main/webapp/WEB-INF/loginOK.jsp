@@ -25,7 +25,6 @@ if (loginUser != null) {
 
 			<ul class="menu">
 				<li><a href="BlackjackServlet" class="menu-link">ゲーム開始</a></li>
-				<li><a href="MyRecordServlet" class="menu-link">自分の戦績</a></li>
 				<li><a href="RankingServlet" class="menu-link">勝率ランキング</a></li>
 				<%
 				if ("admin".equals(loginUser.getRole())) {

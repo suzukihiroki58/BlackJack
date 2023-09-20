@@ -80,7 +80,7 @@ boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getP
 				<%
 				}
 				%>
-				<h3 class="large-white-text">保有チップ：<%= game.getPlayer().getChips() %></h3>
+				<h3 class="large-white-text">所持チップ：<%= game.getPlayer().getChips() %></h3>
 				<%
 				List<List<Card>> playerHands = game.getPlayer().getHands();
 				int totalHands = playerHands.size();
