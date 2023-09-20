@@ -36,7 +36,7 @@ boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getP
 			<% if (game.getBetAmount() == 0) { %>
     <form action="BlackjackServlet" method="post">
         <label for="betAmount">賭けるチップ: </label>
-        <input type="number" id="betAmount" name="betAmount" min="1" max="<%= game.getPlayer().getChips() %>">
+        <input type="number" id="betAmount" name="betAmount" min="1" max="10">
         <button type="submit" name="action" value="bet">賭ける</button>
     </form>
 <% } else { %>
