@@ -17,6 +17,7 @@ public class LogoutServlet extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		session.removeAttribute("loginUser");
+		session.removeAttribute("game");
 		response.sendRedirect("WelcomeServlet?message=UserLogout");
 	}
 }
