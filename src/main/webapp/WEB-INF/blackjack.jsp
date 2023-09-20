@@ -129,7 +129,9 @@ boolean canSplit = !game.getPlayer().hasSplit() && gameFacade.canSplit(game.getP
 						 %>
 					</span> 
 						<h3 class="large-white-text">チップの増減：<%= game.calculateChipDifference() %></h3>
-						<h3><a href="BlackjackServlet" class="large-white-text-replay">再プレイ</a></h3>
+						<form action="BlackjackServlet" method="post">
+						    <button type="submit" name="action" value="replay">再プレイ</button>
+					  	</form>
 					<%
 					}
 					}

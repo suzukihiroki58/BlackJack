@@ -87,4 +87,8 @@ public class Player {
 		this.chips -= amount;
 	}
 
+	public void setChips(int chips) {
+	    this.chips = chips;
+	}
+
 }

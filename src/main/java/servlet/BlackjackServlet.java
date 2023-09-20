@@ -21,7 +21,8 @@ public class BlackjackServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
-		BlackjackGame game = facade.initializeGame();
+		UserCredential loginUser = facade.getOrCreateLoginUser(session);
+	    BlackjackGame game = facade.getOrCreateGame(session, loginUser);
 		session.setAttribute("game", game);
 		req.setAttribute("game", game);
 		req.getRequestDispatcher("/WEB-INF/blackjack.jsp").forward(req, resp);
@@ -52,6 +53,9 @@ public class BlackjackServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		if ("replay".equals(action)) {
+	        session.removeAttribute("game"); 
+	    }
 		facade.handlePostRequest(session, action, handIndex);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/blackjack.jsp");
 		dispatcher.forward(request, response);
