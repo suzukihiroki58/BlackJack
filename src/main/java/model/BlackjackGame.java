@@ -129,5 +129,13 @@ public class BlackjackGame {
 		Card secondCard = hand.get(1);
 		return firstCard.getNumericValue() == secondCard.getNumericValue();
 	}
+	
+	public PlayerState getPlayerStateForHand(int handIndex) {
+	    if (handIndex >= 0 && handIndex < playerStateList.size()) {
+	        return playerStateList.get(handIndex);
+	    } else {
+	        return null;
+	    }
+	}
 
 }

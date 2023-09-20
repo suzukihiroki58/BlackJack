@@ -21,9 +21,15 @@ public class BlackjackGameFacade {
 	}
 
 	public void performPlayerAction(BlackjackGame game, PlayerAction action, int handIndex) {
+		if (game.getPlayerStateForHand(handIndex) == BlackjackGame.PlayerState.BURST) {
+	        return;
+	    }
 
 		switch (action) {
 		case HIT:
+			if (game.getPlayer().getHandTotal(handIndex) == 21) {
+		        return;
+		    }
 			game.playerHit(game.drawCard(), handIndex);
 			break;
 		case STAND:
