@@ -79,7 +79,8 @@ public class UserFacade {
 	    boolean success = registerUser(userName, password, nickname);
 
 	    if (success) {
-	        HttpSession session = request.getSession();
+	    	HttpSession session = request.getSession();
+	        session.setAttribute("registrationMessage", "ユーザー登録が完了しました");
 	        session.setAttribute("userName", userName);
 	        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/login.jsp");
 	        dispatcher.forward(request, response);

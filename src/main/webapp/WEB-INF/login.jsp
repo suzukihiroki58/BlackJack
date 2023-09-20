@@ -13,6 +13,12 @@
 	</div>
 	<div class="main-wrapper">
 		<div class="container">
+		<% if (session.getAttribute("registrationMessage") != null) { %>
+		<p class="message"><%= session.getAttribute("registrationMessage") %></p>
+		<%
+		    session.removeAttribute("registrationMessage");
+		}
+		%>
 			<form action="LoginServlet" method="post">
 				<div class="form-group">
 					<label class="label-text" for="userName">ユーザーネーム：</label> <input
