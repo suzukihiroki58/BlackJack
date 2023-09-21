@@ -96,7 +96,9 @@ boolean canSplit = !game.getPlayer().hasSplit() && game.canSplit(game.getPlayer(
 					%>
 					<%
 					if (!game.isGameOver(currentHandIndex)) {
-					%>
+						if (handTotal > 21) {
+						} else if (handTotal != 21 && game.getPlayerStateForHand(currentHandIndex) != BlackjackGame.PlayerState.STAND) {
+				        %>
 					<form action="BlackjackServlet" method="post" class="button-container">
 						<input type="hidden" name="handIndex" value="<%=handIndex%>">
 						<button type="submit" name="action" value="hit"
@@ -116,6 +118,17 @@ boolean canSplit = !game.getPlayer().hasSplit() && game.canSplit(game.getPlayer(
 						
 					</form>
 					<%
+					    } else if (handTotal == 21) {
+					%>
+					<form action="BlackjackServlet" method="post" class="button-container">
+					    <input type="hidden" name="handIndex" value="<%=handIndex%>">
+					    <button type="submit" name="action" value="stand" class="game-button">スタンド</button>
+					    <% if (canSplit) { %>
+					    <button type="submit" name="action" value="split" class="game-button">スプリット</button>
+					    <% } %>  
+					</form>
+					<%
+				            }
 					handIndex += 1;
 					} else {
 					if (currentHandIndex == totalHands - 1) {
