@@ -41,29 +41,41 @@ public class UsersDAO extends BaseDAO {
 	public boolean isUserRegisteredSuccessfully(Account account) {
 		boolean isSuccess = false;
 		Connection conn = null;
-		PreparedStatement pStmt = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
 		try {
 			conn = getConnection();
+			conn.setAutoCommit(false);
 			String salt = generateSalt();
 			String hashedPassword = hashPassword(account.getHashedPassword(), salt);
 			String sql = "INSERT INTO USERS (USERNAME, HASHED_PASSWORD, SALT, NICKNAME) VALUES (?, ?, ?, ?)";
-			
-			pStmt = conn.prepareStatement(sql);
-			pStmt.setString(1, account.getUserName());
-			pStmt.setString(2, hashedPassword);
-			pStmt.setString(3, salt);
-			pStmt.setString(4, account.getNickname());
 
-			int result = pStmt.executeUpdate();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, account.getUserName());
+			ps.setString(2, hashedPassword);
+			ps.setString(3, salt);
+			ps.setString(4, account.getNickname());
+
+			int result = ps.executeUpdate();
 			if (result == 1) {
+				String generatedIdQuery = "SELECT LAST_INSERT_ID() as last_id";
+				ps = conn.prepareStatement(generatedIdQuery);
+				rs = ps.executeQuery();
+				if (rs.next()) {
+					String newUserId = rs.getString("last_id");
+
+					GameRecordsDAO gameRecordsDAO = new GameRecordsDAO();
+					gameRecordsDAO.updatePlayerChips(newUserId, 100);
+				}
 				isSuccess = true;
+				conn.commit();
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			closeResources(conn, pStmt, null);
+			closeResources(conn, ps, null);
 		}
 		return isSuccess;
 	}
@@ -109,7 +121,7 @@ public class UsersDAO extends BaseDAO {
 	public void deleteUser(String userId) {
 		Connection conn = null;
 		PreparedStatement Pstmt = null;
-		
+
 		try {
 			conn = getConnection();
 			String sql = "DELETE FROM users WHERE USER_ID = ?";
