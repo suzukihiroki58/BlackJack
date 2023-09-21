@@ -38,13 +38,13 @@ public class LoginServlet extends HttpServlet {
 		if (result) {
 			HttpSession session = request.getSession();
 			session.setAttribute("loginUser", userCredential);
-
 			session.setAttribute("userId", userCredential.getUserId());
-
 			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/loginOK.jsp");
 			dispatcher.forward(request, response);
 		} else {
-			response.sendRedirect("WelcomeServlet");
+			request.setAttribute("errorMessage", "ユーザーネームまたはパスワードが間違っています。"); 
+			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/login.jsp");
+	        dispatcher.forward(request, response);
 		}
 	}
 }

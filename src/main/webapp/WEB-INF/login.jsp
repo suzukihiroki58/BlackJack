@@ -13,6 +13,9 @@
 	</div>
 	<div class="main-wrapper">
 		<div class="container">
+		<% if (request.getAttribute("errorMessage") != null) { %>
+        <p class="message"><%= request.getAttribute("errorMessage") %></p>
+        <% } %>
 		<% if (session.getAttribute("registrationMessage") != null) { %>
 		<p class="message"><%= session.getAttribute("registrationMessage") %></p>
 		<%
