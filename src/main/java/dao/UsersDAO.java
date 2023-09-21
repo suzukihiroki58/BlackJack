@@ -83,17 +83,17 @@ public class UsersDAO extends BaseDAO {
 	public Account findAccountByUserNameAndPassword(UserCredential userCredential) {
 		Account account = null;
 		Connection conn = null;
-		PreparedStatement pStmt = null;
+		PreparedStatement ps = null;
 		ResultSet rs = null;
 
 		try {
 			conn = DriverManager.getConnection(DatabaseConfig.DB_URL, DatabaseConfig.DB_USERNAME,
 					DatabaseConfig.DB_PASSWORD);
 			String sql = "SELECT USER_ID, USERNAME, HASHED_PASSWORD, SALT, NICKNAME, ROLE FROM USERS WHERE USERNAME = ?";
-			pStmt = conn.prepareStatement(sql);
-			pStmt.setString(1, userCredential.getUserName());
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, userCredential.getUserName());
 
-			rs = pStmt.executeQuery();
+			rs = ps.executeQuery();
 			if (rs.next()) {
 				String userId = rs.getString("USER_ID");
 				String userName = rs.getString("USERNAME");
@@ -112,40 +112,39 @@ public class UsersDAO extends BaseDAO {
 			e.printStackTrace();
 			return null;
 		} finally {
-			closeResources(conn, pStmt, rs);
+			closeResources(conn, ps, rs);
 		}
 
 		return account;
 	}
 
-	public void deleteUser(String userId) {
+	public void deleteUser(int userId) {
 		Connection conn = null;
-		PreparedStatement Pstmt = null;
-
+		PreparedStatement ps = null;
 		try {
 			conn = getConnection();
 			String sql = "DELETE FROM users WHERE USER_ID = ?";
-			Pstmt = conn.prepareStatement(sql);
-			Pstmt.setString(1, userId);
-			Pstmt.executeUpdate();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, userId);
+			int affectedRows = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			closeResources(conn, Pstmt, null);
+			closeResources(conn, ps, null);
 		}
 	}
 
 	public List<Account> getAllUsers() {
 		List<Account> accounts = new ArrayList<>();
 		Connection conn = null;
-		PreparedStatement pStmt = null;
+		PreparedStatement ps = null;
 		ResultSet rs = null;
 
 		try {
 			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 			String sql = "SELECT * FROM USERS";
-			pStmt = conn.prepareStatement(sql);
-			rs = pStmt.executeQuery();
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
 
 			while (rs.next()) {
 				accounts.add(
@@ -160,7 +159,7 @@ public class UsersDAO extends BaseDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			closeResources(conn, pStmt, rs);
+			closeResources(conn, ps, rs);
 		}
 
 		return accounts;
@@ -169,22 +168,22 @@ public class UsersDAO extends BaseDAO {
 	public boolean isUserNameExists(String userName) {
 		boolean exists = false;
 		Connection conn = null;
-		PreparedStatement pStmt = null;
+		PreparedStatement ps = null;
 		ResultSet rs = null;
 
 		try {
 			conn = getConnection();
 			String sql = "SELECT USERNAME FROM USERS WHERE USERNAME = ?";
-			pStmt = conn.prepareStatement(sql);
-			pStmt.setString(1, userName);
-			rs = pStmt.executeQuery();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, userName);
+			rs = ps.executeQuery();
 			if (rs.next()) {
 				exists = true;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			closeResources(conn, pStmt, rs);
+			closeResources(conn, ps, rs);
 		}
 
 		return exists;

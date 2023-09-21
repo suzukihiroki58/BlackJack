@@ -19,7 +19,7 @@ public class DeleteAnyUserServlet extends HttpServlet {
 		String userId = request.getParameter("userId");
 
 		UserFacade facade = new UserFacade();
-		facade.deleteUser(userId);
+		facade.deleteUser(Integer.parseInt(userId));
 
 		response.sendRedirect("AdminServlet");
 	}

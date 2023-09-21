@@ -18,24 +18,25 @@ public class UserFacade {
 	private UsersDAO usersDAO;
 
     public UserFacade() {
-        this.usersDAO = new UsersDAO();
+    	this.usersDAO = new UsersDAO();
     }
 	
-	public void deleteUser(String userId) {
+	public void deleteUser(int userId) {
         usersDAO.deleteUser(userId);
     }
 	
 	public boolean deleteUserIfLoggedIn(HttpSession session) {
-        if (session != null) {
-            UserCredential loggedInUser = (UserCredential) session.getAttribute("loginUser");
-            if (loggedInUser != null) {
-                deleteUser(loggedInUser.getUserName());
-                session.invalidate();
-                return true;
-            }
-        }
-        return false;
-    }
+	    if (session != null) {
+	        UserCredential loggedInUser = (UserCredential) session.getAttribute("loginUser");
+	        if (loggedInUser != null) {
+	            deleteUser(Integer.parseInt(loggedInUser.getUserId()));
+	            session.invalidate();
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+
 	
 	public boolean authenticate(UserCredential login) {
         UsersDAO dao = new UsersDAO();
