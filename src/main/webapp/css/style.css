@@ -218,3 +218,8 @@ input[type="submit"]:hover {
 	height: 600px;
 	overflow-y: auto;
 }
+
+input::placeholder {
+	color: lightgrey;
+	font-size: 20px;
+}

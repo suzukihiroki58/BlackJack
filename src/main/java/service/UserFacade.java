@@ -62,6 +62,11 @@ public class UserFacade {
 	public boolean registerUser(String userName, String password, String nickname) {
         boolean userNameExists = accountsDAO.isUserNameExists(userName);
 
+        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{10,}$";
+        if (!password.matches(regex)) {
+            return false;
+        }
+
         if (userNameExists) {
             return false;
         }
@@ -85,7 +90,7 @@ public class UserFacade {
 	        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/login.jsp");
 	        dispatcher.forward(request, response);
 	    } else {
-	        request.setAttribute("errorMessage", "そのユーザー名は既に使用されています。");
+	        request.setAttribute("errorMessage", "ユーザー名が既に存在するか、パスワードが要件を満たしていません。");
 	        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/register.jsp");
 	        dispatcher.forward(request, response);
 	    }

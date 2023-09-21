@@ -26,12 +26,12 @@
 				<div class="form-group">
 					<label class="label-text" for="password">パスワード：</label> <input
 						type="password" id="password" name="password"
-						class="password-input">
+						class="password-input" placeholder="英大文字・小文字・数字・記号含めた10桁以上">
 				</div>
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<label class="label-text" for="nickname">ニックネーム：</label> <input
 						type="text" id="nickname" name="nickname" class="nickname-input">
-				</div>
+				</div> -->
 				<input type="submit" value="登録">
 			</form>
 		</div>

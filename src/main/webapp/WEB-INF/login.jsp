@@ -27,7 +27,7 @@
 				<div class="form-group">
 					<label class="label-text" for="password">パスワード：</label> <input
 						type="password" id="password" name="password"
-						class="password-input">
+						class="password-input" placeholder="英大文字・小文字・数字・記号含めた10桁以上">
 				</div>
 				<input type="submit" value="ログイン">
 			</form>
