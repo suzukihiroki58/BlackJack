@@ -39,7 +39,6 @@ UserCredential loginUser = (UserCredential) session.getAttribute("loginUser");
 					<tr>
 						<th>ユーザーID</th>
 						<th>ユーザー名</th>
-						<th>ニックネーム</th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -50,7 +49,6 @@ UserCredential loginUser = (UserCredential) session.getAttribute("loginUser");
 					<tr>
 						<td><%=user.getUserId()%></td>
 						<td><%=user.getUserName()%></td>
-						<td><%=user.getNickname()%></td>
 						<td>
 							<form action="DeleteAnyUserServlet" method="post" onsubmit="return confirmDelete();">
 								<input type="hidden" name="userId" value="<%=user.getUserId()%>" />

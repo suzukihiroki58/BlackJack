@@ -71,7 +71,7 @@ public class UserFacade {
             return false;
         }
         
-        Account newAccount = new Account(userName, password, nickname);
+        Account newAccount = new Account(userName, password, Optional.ofNullable(nickname).orElse(""));
         return accountsDAO.isUserRegisteredSuccessfully(newAccount);
     }
 	
