@@ -40,19 +40,26 @@ UserCredential loginUser = (UserCredential) session.getAttribute("loginUser");
                     </tr>
                 </thead>
                 <%
-                int rank = 1;
-                for (GameRecord record : records) {
-                    if (rank <= 5) {
-                %>
-                <tr>
-                    <td><%=rank++%></td>
-                    <td><%=record.getUserName()%></td>
-                    <td><%=record.getChips()%></td>
-                </tr>
-                <%
-                    }
-                }
-                %>
+				int rank = 1;
+				int lastChips = -1;
+				int displayedRank = 1;
+				for (GameRecord record : records) {
+				    if (rank <= 5) {
+				        if (lastChips != -1 && lastChips != record.getChips()) {
+				            displayedRank = rank;
+				        }
+				        lastChips = record.getChips();
+				%>
+				<tr>
+				    <td><%=displayedRank%></td>
+				    <td><%=record.getUserName()%></td>
+				    <td><%=record.getChips()%></td>
+				</tr>
+				<%
+				        rank++;
+				    }
+				}
+				%>
             </table>
         </div>
     </div>

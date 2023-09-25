@@ -45,6 +45,7 @@ UserCredential loginUser = (UserCredential) session.getAttribute("loginUser");
 				<tbody>
 					<%
 					for (Account user : users) {
+						if (!loginUser.getUserId().equals(user.getUserId())) {
 					%>
 					<tr>
 						<td><%=user.getUserId()%></td>
@@ -57,6 +58,7 @@ UserCredential loginUser = (UserCredential) session.getAttribute("loginUser");
 						</td>
 					</tr>
 					<%
+						}
 					}
 					%>
 				</tbody>
